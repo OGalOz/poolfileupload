@@ -1,0 +1,46 @@
+#
+# define display information
+#
+name: Import Pool File (TSV) from Staging Area
+subtitle: |
+    Import a pool file (in TSV format) from your staging area into your Narrative
+
+tooltip: |
+    Import a pool file (in TSV format) from your staging area into your Narrative
+
+screenshots: []
+
+icon: data-teal.png
+#
+# define a set of similar apps that might be useful to the user
+#
+suggestions:
+    apps:
+        related:
+            []
+        next:
+            []
+
+#
+# Configure the display and description of parameters
+#
+parameters :
+    staging_file_subdir_path :
+        ui-name : |
+            TSV File Path
+        short-hint : |
+            Select a pool file in TSV format. Filename should end with ".tsv", ".n10" or ".pool"
+        long-hint  : |
+            Pool file should have 4 tab-separated fields -- 
+            barcode, rcbarcode, nTot, n, scaffold, strand, pos, n2, scaffold2, strand2, pos2, nPastEnd
+    poolfile_name :
+        ui-name : |
+            Pool File Name
+        short-hint : |
+            Name your pool file. Avoid special characters
+        long-hint  : |
+            This is the name of your pool file that will appear in the data column.
+
+description : |
+    <h1>Upload A pool file to be used in RBTnSeq programs.</h1>
+
