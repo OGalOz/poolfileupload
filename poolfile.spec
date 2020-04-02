@@ -24,7 +24,7 @@ typedef list<col_header> col_list;
 
 /*
 file_type - KBaseRBTnSeq.PoolTSV, the name of the file type.
-handle_id - allows to get info re. shock node, shock url,
+poolfile - handle that allows to download file, and get info re. shock node, shock url,
 handle_type - the type of the handle. This should always be ‘shock’.
 shock_url - the url of the shock server
 shock_node_id - the id of the shock node in the server
@@ -51,7 +51,7 @@ description - A description given by the uploader as to what the
 */
 typedef structure {
     string file_type;
-    handle_id hid;
+    handle_id poolfile;
     string handle_type;
     string shock_url;
     string shock_node_id;
