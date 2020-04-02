@@ -6,6 +6,7 @@ import h5py
 import uuid
 from installed_clients.KBaseReportClient import KBaseReport
 from installed_clients.DataFileUtilClient import DataFileUtil
+from installed_clients.WorkspaceClient import Workspace
 from pprint import pprint
 from shutil import copy
 import subprocess
@@ -39,26 +40,41 @@ class poolfileuploadUtil:
         try:
             os.mkdir(self.staging_folder)
         except OSError:
+            #We expect this error if staging_folder exists
             print ("Creation of the directory %s failed" % self.staging_folder)
         else:
             print ("Successfully created the directory %s " % self.staging_folder)
-        # reaction = self.params['input_deck_file']
+
 
         #This is the path to the pool file
         poolfile_fp = os.path.join(self.staging_folder, staging_pool_fp_name)
 
         #We check correctness of pool file
-        check_pool_result = self.check_pool_file(poolfile_fp) 
-
+        column_header_list = self.check_pool_file(poolfile_fp) 
+        if len(column_header_list) != 12:
+            print("WARNING: Number of columns is not 12 as expected: {}".format(
+                len(column_header_list)))
 
         #We create the data for the object:
-        pool_handle = self.dfu.file_to_shock({'file_path':poolfile_fp,
-            'pack':'gzip'})['handle']['hid']
+        file_to_shock_result = self.dfu.file_to_shock({'file_path':poolfile_fp,
+            'make_handle': True,
+            'pack':'gzip'})
+        res_handle = file_to_shock_result['handle']
 
-        db = {  "name": "poolfile", 
-                "description": "Intermediary file for RBTnSeq", 
-                "orig_workspace": self.params['workspace'],
-                "poolfile_handle": pool_handle}
+        pool_data = {
+        'file_type' : 'KBaseRBTnSeq.PoolTSV',
+        'handle_id' : res_handle['hid'],
+        'shock_url' : res_handle['url'],
+        'shock_node_id' : res_handle['id'],
+        'shock_type' : res_handle['type'], #should be shock
+        'compression_type' : "gzip",
+        'file_name' : res_handle['file_name'],
+        'run_method' : params['run_method'],
+        'related_genome_ref' : params['genome_ref'],
+        'related_organism_name' : get_genome_organism_name(
+            params['genome_ref']),
+        'description' : params['description']
+        }
 
 
         #To get workspace id:
@@ -68,17 +84,18 @@ class poolfileuploadUtil:
             'id': ws_id,
             'objects': [{
                 'type': 'KBaseRBTnSeq.PoolTSV',
-                'data': db,
+                'data': pool_data,
                 'name': poolfile_name
             }]
         }
 
         # save_objects returns a list of object_infos
-        dfu_oi = self.dfu.save_objects(save_object_params)[0]
+        dfu_object_info = self.dfu.save_objects(save_object_params)[0]
 
-        print(dfu_oi)
-
-        return {'Name':dfu_oi[1]}
+        print('dfu_object_info: ')
+        print(dfu_object_info)
+        return {'Name':dfu_object_info[1], 'Type': dfu_object_info[2], 
+                'date' dfu_object_info[3]}
 
 
     def validate_import_poolfile_from_staging_params(self, params):
@@ -89,7 +106,7 @@ class poolfileuploadUtil:
 
 
     def check_pool_file(self, poolfile_fp):
-    
+        col_header_list = []
         #Parse pool file and check for errors
         test_vars_dict = {
                 "poolfile": pool_fp,
@@ -99,13 +116,13 @@ class poolfileuploadUtil:
         }
        
         try:
-            init_pool_dict(test_vars_dict)
+            col_header_list = init_pool_dict(test_vars_dict)
         except Exception:
             logging.warning("Pool file seems to have errors - " \
                     + "Please check and reupload.")
             raise Exception
     
-        return 0
+        return col_header_list
     
     
     def init_pool_dict(self, vars_dict):
@@ -113,6 +130,7 @@ class poolfileuploadUtil:
         with open(vars_dict['poolfile'], "r") as f:
             poolfile_str = f.read()
             poolfile_lines = poolfile_str.split("\n")
+            column_header_list = [x.strip() for x in poolfile_lines[0].split("\t")]
             for pool_line in poolfile_lines:
                 pool_line.rstrip()
                 pool = check_pool_line_and_add_to_pool_dict(pool_line, pool,
@@ -120,7 +138,7 @@ class poolfileuploadUtil:
         if len(pool.keys()) == 0:
             raise Exception("No entries in pool file")
     
-        return pool
+        return column_header_list
     
     
     def check_pool_line_and_add_to_pool_dict(self, pool_line, pool, vars_dict):
@@ -159,7 +177,19 @@ class poolfileuploadUtil:
             pool[rcbarcode] = [barcode, scaffold, strand, pos]
         return pool
     
-    
+    def get_genome_organism_name(self, genome_ref):
+        #Getting the organism name using WorkspaceClient 
+        ws = Workspace(self.callback_url)
+        res = ws.get_objects2({
+                    "objects": [
+                        "ref": genome_ref,
+                        "included": ["scientific_name"]
+                    ]
+                })
+        scientific_name = res['data'][0]['data']['scientific_name']
+        return scientific_name 
+
+        
     
     
     

@@ -54,10 +54,14 @@ class poolfileupload:
 
         pfu = poolfileuploadUtil(params)
         result = pfu.upload_poolfile()
+        
+        text_message = "Finished uploading pool file \n"
+        text_message += "{} saved as {} on {}\n".format(result['Name'],
+                result['Type'], result['Date'])
 
         report = KBaseReport(self.callback_url)
         report_info = report.create({'report': {'objects_created':[],
-                                                'text_message': "Finished uploading pool file"},
+                                                'text_message': text_message},
                                                 'workspace_name': params['workspace_name']})
 
         output = {
