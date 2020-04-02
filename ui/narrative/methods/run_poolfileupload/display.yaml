@@ -33,6 +33,28 @@ parameters :
         long-hint  : |
             Pool file should have 4 tab-separated fields -- 
             barcode, rcbarcode, nTot, n, scaffold, strand, pos, n2, scaffold2, strand2, pos2, nPastEnd
+    genome_ref :
+        ui-name : |
+            Related Genome Object
+        short-hint : |
+            The Genome to which this pool file corresponds
+        long-hint : |
+            The Genome to which the pool file corresponds.
+    description :
+        ui-name : |
+            Description
+        short-hint : |
+            An unconstrained description of the pool file and project.
+        long-hint : |
+            Please give a light description of the pool file and project.
+    run_method :
+        ui-name : |
+            Run Method
+        short-hint : |
+            For now this is always Pool Count
+        long-hint : |
+            Choose the proper use case for the pool file. If your use case doesn't exist,
+            choose one of the existing options. Currently the only option is Pool Count.
     poolfile_name :
         ui-name : |
             Pool File Name
@@ -42,5 +64,5 @@ parameters :
             This is the name of your pool file that will appear in the data column.
 
 description : |
-    <h1>Upload A pool file to be used in RBTnSeq programs.</h1>
+    <h1>Upload A pool file to be used in RBTnSeq programs or others.</h1>
 

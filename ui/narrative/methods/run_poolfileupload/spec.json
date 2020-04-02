@@ -22,6 +22,47 @@
             }
         },
         {
+
+            "id": "genome_ref",
+            "optional": false,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [""],
+            "field_type": "text",
+            "text_options": {
+                "valid_ws_types": "KBaseGenomes.Genome"
+            }
+        },
+        {
+
+            "id": "description",
+            "optional": false,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [""],
+            "field_type": "textarea",
+            "textarea_options": {
+                "n_rows": 3
+            }
+        },
+
+        {
+            "id": "run_method",
+            "optional": false,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [ "poolcount" ],
+            "field_type": "dropdown",
+            "dropdown_options": {
+                "options": [
+                {
+                    "value": "poolcount",
+                    "display": "Pool Count"
+                }
+                ]
+            }
+        },
+        {
             "id": "poolfile_name",
             "optional": false,
             "advanced": false,

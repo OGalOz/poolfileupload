@@ -100,7 +100,8 @@ class poolfileuploadUtil:
 
     def validate_import_poolfile_from_staging_params(self, params):
         # check for required parameters
-        for p in ['staging_file_subdir_path', 'workspace_name', 'poolfile_name']:
+        for p in ['staging_file_subdir_path', 'genome_ref', 'description',
+                'run_method', 'workspace_name', 'poolfile_name']:
             if p not in params:
                 raise ValueError('"{}" parameter is required, but missing'.format(p))
 

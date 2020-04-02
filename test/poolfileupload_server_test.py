@@ -63,5 +63,18 @@ class poolfileuploadTest(unittest.TestCase):
         #
         # Check returned data with
         # self.assertEqual(ret[...], ...) or other unittest methods
-        ret = self.serviceImpl.run_poolfileupload(self.ctx, {'workspace_name': self.wsName,
-                                                             'parameter_1': 'Hello World!'})
+
+        staging_pool = "new_pool_file.n10"
+        genome_ref = "1/2/3"
+        description = "Testing module"
+        run_method = "poolcount"
+        poolfile_name = "initial_testing_output"
+
+        ret = self.serviceImpl.run_poolfileupload(self.ctx, 
+                {'workspace_name': self.wsName,
+                'staging_file_subdir_path': staging_pool,
+                'genome_ref': genome_ref,
+                'description': description,
+                'run_method': run_method,
+                'poolfile_name': poolfile_name
+                })
