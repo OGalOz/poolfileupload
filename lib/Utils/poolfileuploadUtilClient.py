@@ -1,15 +1,9 @@
 
-import json
 import os,logging,re
 import subprocess
-import h5py
-import uuid
 from installed_clients.KBaseReportClient import KBaseReport
 from installed_clients.DataFileUtilClient import DataFileUtil
 from installed_clients.WorkspaceClient import Workspace
-from pprint import pprint
-from shutil import copy
-import subprocess
 
 
 class poolfileuploadUtil:
@@ -26,7 +20,7 @@ class poolfileuploadUtil:
     def upload_poolfile(self):
 
         print('params: ',self.params)
-        self.validate_import_poolfile_from_staging_params(self, params)
+        self.validate_import_poolfile_from_staging_params()
 
         #Name of file in staging:
         staging_pool_fp_name = self.params['staging_file_subdir_path']
@@ -63,15 +57,14 @@ class poolfileuploadUtil:
 
         pool_data = {
         'file_type' : 'KBaseRBTnSeq.PoolTSV',
-        'handle_id' : res_handle['hid'],
-        'shock_url' : res_handle['url'],
-        'shock_node_id' : res_handle['id'],
-        'shock_type' : res_handle['type'], #should be shock
+        'hid' : res_handle['hid'],
+        'handle_type' : res_handle['type'], #should be shock
         'compression_type' : "gzip",
+        'column_header_list': column_header_list,
         'file_name' : res_handle['file_name'],
         'run_method' : params['run_method'],
         'related_genome_ref' : params['genome_ref'],
-        'related_organism_name' : get_genome_organism_name(
+        'related_organism_scientific_name' : self.get_genome_organism_name(
             params['genome_ref']),
         'description' : params['description']
         }
@@ -95,14 +88,14 @@ class poolfileuploadUtil:
         print('dfu_object_info: ')
         print(dfu_object_info)
         return {'Name':dfu_object_info[1], 'Type': dfu_object_info[2], 
-                'date' dfu_object_info[3]}
+                'Date': dfu_object_info[3]}
 
 
-    def validate_import_poolfile_from_staging_params(self, params):
+    def validate_import_poolfile_from_staging_params(self):
         # check for required parameters
         for p in ['staging_file_subdir_path', 'genome_ref', 'description',
                 'run_method', 'workspace_name', 'poolfile_name']:
-            if p not in params:
+            if p not in self.params:
                 raise ValueError('"{}" parameter is required, but missing'.format(p))
 
 
@@ -110,14 +103,14 @@ class poolfileuploadUtil:
         col_header_list = []
         #Parse pool file and check for errors
         test_vars_dict = {
-                "poolfile": pool_fp,
+                "poolfile": poolfile_fp,
                 "report_dict": {
                     "warnings": []
                     }
         }
        
         try:
-            col_header_list = init_pool_dict(test_vars_dict)
+            col_header_list = self.init_pool_dict(test_vars_dict)
         except Exception:
             logging.warning("Pool file seems to have errors - " \
                     + "Please check and reupload.")
@@ -134,8 +127,8 @@ class poolfileuploadUtil:
             column_header_list = [x.strip() for x in poolfile_lines[0].split("\t")]
             for pool_line in poolfile_lines:
                 pool_line.rstrip()
-                pool = check_pool_line_and_add_to_pool_dict(pool_line, pool,
-                        vars_dict)
+                pool = self.check_pool_line_and_add_to_pool_dict(pool_line, 
+                        pool, vars_dict)
         if len(pool.keys()) == 0:
             raise Exception("No entries in pool file")
     
@@ -182,9 +175,10 @@ class poolfileuploadUtil:
         #Getting the organism name using WorkspaceClient 
         ws = Workspace(self.callback_url)
         res = ws.get_objects2({
-                    "objects": [
+                    "objects": [{
                         "ref": genome_ref,
                         "included": ["scientific_name"]
+                        }
                     ]
                 })
         scientific_name = res['data'][0]['data']['scientific_name']

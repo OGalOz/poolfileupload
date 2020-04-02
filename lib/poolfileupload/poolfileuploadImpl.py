@@ -51,7 +51,8 @@ class poolfileupload:
         # ctx is the context object
         # return variables are: output
         #BEGIN run_poolfileupload
-
+        
+        params['shared_folder'] = self.shared_folder
         pfu = poolfileuploadUtil(params)
         result = pfu.upload_poolfile()
         

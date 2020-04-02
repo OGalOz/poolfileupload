@@ -24,8 +24,7 @@ typedef list<col_header> col_list;
 
 /*
 file_type - KBaseRBTnSeq.PoolTSV, the name of the file type.
-shock_url - the shock url for the server (from DFU File to Shock)
-shock_node_id - the node id within the shock server 
+handle_id - allows to get info re. shock node, shock url,
 handle_type - the type of the handle. This should always be ‘shock’.
 compression_type - the type of compression used
 file_name - the name of the file
@@ -42,8 +41,6 @@ description - A description given by the uploader as to what the
     pool file means.
 
 @metadata ws handle_type as handle_type
-@metadata ws shock_url as shock_url
-@metadata ws shock_node_id as shock_node_id
 @metadata ws run_method as run_method
 @metadata ws related_genome_ref as related_genome_ref
 @metadata ws related_organism_scientific_name as related_organism_scientific_name
@@ -51,8 +48,6 @@ description - A description given by the uploader as to what the
 typedef structure {
     string file_type;
     handle_id hid;
-    string shock_url;
-    string shock_node_id;
     string handle_type;
     string compression_type;
     string file_name;
