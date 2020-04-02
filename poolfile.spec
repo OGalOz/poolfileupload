@@ -26,6 +26,8 @@ typedef list<col_header> col_list;
 file_type - KBaseRBTnSeq.PoolTSV, the name of the file type.
 handle_id - allows to get info re. shock node, shock url,
 handle_type - the type of the handle. This should always be ‘shock’.
+shock_url - the url of the shock server
+shock_node_id - the id of the shock node in the server
 compression_type - the type of compression used
 file_name - the name of the file
 column_header_list - a list of the headers of the columns, the length of this 
@@ -42,6 +44,8 @@ description - A description given by the uploader as to what the
 
 @metadata ws handle_type as handle_type
 @metadata ws run_method as run_method
+@metadata ws shock_url as shock_url
+@metadata ws shock_node_id as shock_node_id
 @metadata ws related_genome_ref as related_genome_ref
 @metadata ws related_organism_scientific_name as related_organism_scientific_name
 */
@@ -49,6 +53,8 @@ typedef structure {
     string file_type;
     handle_id hid;
     string handle_type;
+    string shock_url;
+    string shock_node_id;
     string compression_type;
     string file_name;
     col_list column_header_list;

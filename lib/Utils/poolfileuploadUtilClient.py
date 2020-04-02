@@ -59,6 +59,8 @@ class poolfileuploadUtil:
         'file_type' : 'KBaseRBTnSeq.PoolTSV',
         'hid' : res_handle['hid'],
         'handle_type' : res_handle['type'], #should be shock
+        'shock_url': res_handle['url'],
+        'shock_node_id': res_handle['id'],
         'compression_type' : "gzip",
         'column_header_list': column_header_list,
         'file_name' : res_handle['file_name'],
