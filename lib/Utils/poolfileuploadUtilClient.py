@@ -57,7 +57,7 @@ class poolfileuploadUtil:
 
         pool_data = {
         'file_type' : 'KBaseRBTnSeq.PoolTSV',
-        'hid' : res_handle['hid'],
+        'poolfile' : res_handle['hid'],
         'handle_type' : res_handle['type'], #should be shock
         'shock_url': res_handle['url'],
         'shock_node_id': res_handle['id'],
