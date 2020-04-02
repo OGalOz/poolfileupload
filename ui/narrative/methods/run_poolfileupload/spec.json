@@ -86,7 +86,18 @@
                 },{
                     "narrative_system_variable": "workspace_id",
                     "target_property": "workspace_id"
-                },{
+                },
+                {
+                    "input_parameter": "genome_ref",
+                    "target_property": "genome_ref"
+                },              {
+                    "input_parameter": "description",
+                    "target_property": "description"
+                },              {
+                    "input_parameter": "run_method",
+                    "target_property": "run_method"
+                },
+                {
                     "input_parameter": "staging_file_subdir_path",
                     "target_property": "staging_file_subdir_path"
                 },{
