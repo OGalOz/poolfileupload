@@ -64,8 +64,8 @@ class poolfileuploadTest(unittest.TestCase):
         # Check returned data with
         # self.assertEqual(ret[...], ...) or other unittest methods
 
-        staging_pool = "new_pool_file.n10"
-        genome_ref = "1/2/3"
+        staging_pool = "feba_148_pool.n10"
+        genome_ref = "39774/8/1"
         description = "Testing module"
         run_method = "poolcount"
         poolfile_name = "initial_testing_output"
