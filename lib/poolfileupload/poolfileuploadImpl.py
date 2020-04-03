@@ -40,7 +40,6 @@ class poolfileupload:
         #END_CONSTRUCTOR
         pass
 
-
     def run_poolfileupload(self, ctx, params):
         """
         This example function accepts any number of parameters and returns results in a KBaseReport
@@ -51,14 +50,14 @@ class poolfileupload:
         # ctx is the context object
         # return variables are: output
         #BEGIN run_poolfileupload
-        
+
         params['shared_folder'] = self.shared_folder
         pfu = poolfileuploadUtil(params)
         result = pfu.upload_poolfile()
-        
+
         text_message = "Finished uploading pool file \n"
         text_message += "{} saved as {} on {}\n".format(result['Name'],
-                result['Type'], result['Date'])
+                        result['Type'], result['Date'])
 
         report = KBaseReport(self.callback_url)
         report_info = report.create({'report': {'objects_created':[],
