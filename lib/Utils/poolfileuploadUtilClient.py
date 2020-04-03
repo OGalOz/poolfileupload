@@ -213,7 +213,16 @@ class poolfileuploadUtil:
         # Getting the organism name using WorkspaceClient
         ws = Workspace(self.callback_url)
         res = ws.get_objects2(
-            {"objects": [{"ref": genome_ref, "included": ["scientific_name"]}]}
+            {
+                "objects": [
+                    {
+                        "workspace": self.params["workspace_name"],
+                        "wsid": self.params["workspace_id"],
+                        "ref": genome_ref,
+                        "included": ["scientific_name"],
+                    }
+                ]
+            }
         )
         scientific_name = res["data"][0]["data"]["scientific_name"]
         return scientific_name
