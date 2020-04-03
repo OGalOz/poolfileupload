@@ -218,7 +218,6 @@ class poolfileuploadUtil:
                 "objects": [
                     {
                         "workspace": self.params["workspace_name"],
-                        "wsid": self.params["workspace_id"],
                         "ref": genome_ref,
                         "included": ["scientific_name"],
                     }
