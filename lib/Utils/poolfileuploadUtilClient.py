@@ -1,6 +1,7 @@
 import os
 import logging
 import re
+import shutil
 from installed_clients.DataFileUtilClient import DataFileUtil
 from installed_clients.WorkspaceClient import Workspace
 
@@ -58,6 +59,10 @@ class poolfileuploadUtil:
                     len(column_header_list)
                 )
             )
+        # We copy the file from staging to scratch
+        new_pool_fp = os.path.join(self.shared_folder, poolfile_name)
+        shutil.copyfile(poolfile_fp, new_pool_fp)
+        poolfile_fp = new_pool_fp
         # We create the data for the object:
         file_to_shock_result = self.dfu.file_to_shock(
             {"file_path": poolfile_fp, "make_handle": True, "pack": "gzip"}
