@@ -25,7 +25,7 @@ class poolfileuploadUtil:
         Find the poolfile in /staging/poolfile_name
         Get the output name for the poolfile
         Get the column headers for the pool file for
-            data and testing purposes. Should be len 12. 
+            data and testing purposes. Should be len 12.
         Test if poolfile is well-formed.
         We send the file to shock using dfu.
         We get the handle and save the object with all
@@ -45,10 +45,9 @@ class poolfileuploadUtil:
         print("top dir /:", os.listdir("/"))
         print("/kb/module/:", os.listdir("/kb/module"))
         if not os.path.exists(self.staging_folder):
-            print("Staging dir does not exist yet!")
+            raise Exception("Staging dir does not exist yet! Error will be thrown")
         else:
             print("Succesfully recognized staging directory")
-        else:
         # This is the path to the pool file
         poolfile_fp = os.path.join(self.staging_folder, staging_pool_fp_name)
         # We check correctness of pool file
@@ -121,7 +120,7 @@ class poolfileuploadUtil:
         """
         We check the pool file by initializing into dict format
 
-        The function "init_pool_dict" runs the tests to see if the file is 
+        The function "init_pool_dict" runs the tests to see if the file is
         correct.
         """
         col_header_list = []
@@ -160,10 +159,10 @@ class poolfileuploadUtil:
         We care about the first 7 columns of each pool line.
         The first line in the file is the headers, and the first 7 are
         barcode, rcbarcode, nTot, n, scaffold, strand, pos
-        Both the barcodes and rcbarcodes must be entirely made up of 
+        Both the barcodes and rcbarcodes must be entirely made up of
         characters from "ACTG". Position must be made up of any number
         of digits (including 0). Strand is from "+","-","".
-        If the rcbarcode already exists in the pool, then there is a 
+        If the rcbarcode already exists in the pool, then there is a
         problem with the pool file. Each rcbarcode must be unique.
         """
         # We get first 7 columns of pool_line (out of 12)
@@ -183,8 +182,7 @@ class poolfileuploadUtil:
                 pos,
             ) = split_pool_line
         else:
-            warning_text = "pool file line with less than 7 tabs:\n{}".format(
-                    pool_line)
+            warning_text = "pool file line with less than 7 tabs:\n{}".format(pool_line)
             vars_dict["report_dict"]["warnings"].append(warning_text)
             logging.warning(warning_text)
             barcode = "barcode"
