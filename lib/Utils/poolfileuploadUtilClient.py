@@ -86,6 +86,7 @@ class poolfileuploadUtil:
             ),
             "description": self.params["description"],
         }
+
         # To get workspace id:
         ws_id = self.params["workspace_id"]
         save_object_params = {
@@ -211,7 +212,7 @@ class poolfileuploadUtil:
 
     def get_genome_organism_name(self, genome_ref):
         # Getting the organism name using WorkspaceClient
-        ws = Workspace(self.callback_url)
+        ws = self.params['ws_obj'] 
         res = ws.get_objects2(
             {
                 "objects": [

@@ -4,6 +4,7 @@ import logging
 import os
 from Utils.poolfileuploadUtilClient import poolfileuploadUtil
 from installed_clients.KBaseReportClient import KBaseReport
+from installed_clients.WorkspaceClient import Workspace
 #END_HEADER
 
 
@@ -35,6 +36,7 @@ class poolfileupload:
         #BEGIN_CONSTRUCTOR
         self.callback_url = os.environ['SDK_CALLBACK_URL']
         self.shared_folder = config['scratch']
+        self.ws_url = config['workspace-url']
         logging.basicConfig(format='%(created)s %(levelname)s: %(message)s',
                             level=logging.INFO)
         #END_CONSTRUCTOR
@@ -52,6 +54,9 @@ class poolfileupload:
         #BEGIN run_poolfileupload
 
         params['shared_folder'] = self.shared_folder
+        token = os.environ.get('KB_AUTH_TOKEN', None)
+        ws = Workspace(self.ws_url, token=token)
+        params['ws_obj'] = ws
         pfu = poolfileuploadUtil(params)
         result = pfu.upload_poolfile()
 
