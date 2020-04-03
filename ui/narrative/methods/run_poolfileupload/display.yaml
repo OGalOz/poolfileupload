@@ -27,7 +27,7 @@ suggestions:
 parameters :
     staging_file_subdir_path :
         ui-name : |
-            TSV File Path
+            Pool TSV File Path
         short-hint : |
             Select a pool file in TSV format. Filename should end with ".tsv", ".n10" or ".pool"
         long-hint  : |
