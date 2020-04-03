@@ -17,7 +17,21 @@ class poolfileuploadUtil:
         self.scratch_folder = os.path.join(params["shared_folder"], "scratch")
 
     def upload_poolfile(self):
+        """
+        The upload method
 
+        We perform a number of steps:
+        Get name of poolfile as it is in staging.
+        Find the poolfile in /staging/poolfile_name
+        Get the output name for the poolfile
+        Get the column headers for the pool file for
+            data and testing purposes. Should be len 12. 
+        Test if poolfile is well-formed.
+        We send the file to shock using dfu.
+        We get the handle and save the object with all
+            the necessary information- including related genome.
+
+        """
         print("params: ", self.params)
         self.validate_import_poolfile_from_staging_params()
 
@@ -30,13 +44,11 @@ class poolfileuploadUtil:
         print("poolfile_name: ", poolfile_name)
         print("top dir /:", os.listdir("/"))
         print("/kb/module/:", os.listdir("/kb/module"))
-        try:
-            os.mkdir(self.staging_folder)
-        except OSError:
-            # We expect this error if staging_folder exists
-            print("Creation of the directory %s failed" % self.staging_folder)
+        if not os.path.exists(self.staging_folder):
+            print("Staging dir does not exist yet!")
         else:
-            print("Successfully created the directory %s " % self.staging_folder)
+            print("Succesfully recognized staging directory")
+        else:
         # This is the path to the pool file
         poolfile_fp = os.path.join(self.staging_folder, staging_pool_fp_name)
         # We check correctness of pool file
@@ -51,6 +63,7 @@ class poolfileuploadUtil:
         file_to_shock_result = self.dfu.file_to_shock(
             {"file_path": poolfile_fp, "make_handle": True, "pack": "gzip"}
         )
+        # The following var res_handle only created for simplification of code
         res_handle = file_to_shock_result["handle"]
         pool_data = {
             "file_type": "KBaseRBTnSeq.PoolTSV",
@@ -105,6 +118,12 @@ class poolfileuploadUtil:
                 raise ValueError('"{}" parameter is required, but missing'.format(p))
 
     def check_pool_file(self, poolfile_fp):
+        """
+        We check the pool file by initializing into dict format
+
+        The function "init_pool_dict" runs the tests to see if the file is 
+        correct.
+        """
         col_header_list = []
         # Parse pool file and check for errors
         test_vars_dict = {"poolfile": poolfile_fp, "report_dict": {"warnings": []}}
@@ -118,6 +137,7 @@ class poolfileuploadUtil:
         return col_header_list
 
     def init_pool_dict(self, vars_dict):
+
         # pool dict is rcbarcode to [barcode, scaffold, strand, pos]
         pool = {}
         with open(vars_dict["poolfile"], "r") as f:
@@ -134,6 +154,18 @@ class poolfileuploadUtil:
         return column_header_list
 
     def check_pool_line_and_add_to_pool_dict(self, pool_line, pool, vars_dict):
+        """
+        For a pool line to be correct it has to follow a few rules.
+
+        We care about the first 7 columns of each pool line.
+        The first line in the file is the headers, and the first 7 are
+        barcode, rcbarcode, nTot, n, scaffold, strand, pos
+        Both the barcodes and rcbarcodes must be entirely made up of 
+        characters from "ACTG". Position must be made up of any number
+        of digits (including 0). Strand is from "+","-","".
+        If the rcbarcode already exists in the pool, then there is a 
+        problem with the pool file. Each rcbarcode must be unique.
+        """
         # We get first 7 columns of pool_line (out of 12)
         split_pool_line = pool_line.split("\t")[:7]
         # We remove spaces:
