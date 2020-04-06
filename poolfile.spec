@@ -1,4 +1,10 @@
 /*
+This module is for storing Pool Files as used in Random Barcode
+Transposon Sequencing
+*/
+module KBasePoolTSV {
+
+/*
 A handle id from the Handle Service for a shock node.
 @id handle
 */
@@ -64,3 +70,6 @@ typedef structure {
     string description;
 
 } PoolFile;
+
+};
+
