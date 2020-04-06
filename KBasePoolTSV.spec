@@ -20,7 +20,7 @@ typedef string genome_ref;
 /*
 A header for a  column
 */
-typedef string col_header
+typedef string col_header;
 
 
 /*
