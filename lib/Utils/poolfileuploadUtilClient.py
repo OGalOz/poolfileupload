@@ -93,7 +93,7 @@ class poolfileuploadUtil:
             "id": ws_id,
             "objects": [
                 {
-                    "type": "KBaseRBTnSeq.PoolTSV",
+                    "type": "KBasePoolTSV.PoolFile",
                     "data": pool_data,
                     "name": poolfile_name,
                 }
