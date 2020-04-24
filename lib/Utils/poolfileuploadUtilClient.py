@@ -63,14 +63,16 @@ class poolfileuploadUtil:
         new_pool_fp = os.path.join(self.shared_folder, poolfile_name)
         shutil.copyfile(poolfile_fp, new_pool_fp)
         poolfile_fp = new_pool_fp
-        # We create the data for the object:
+        # We create the handle for the object:
         file_to_shock_result = self.dfu.file_to_shock(
             {"file_path": poolfile_fp, "make_handle": True, "pack": "gzip"}
         )
         # The following var res_handle only created for simplification of code
         res_handle = file_to_shock_result["handle"]
+
+        # We create the data for the object
         pool_data = {
-            "file_type": "KBaseRBTnSeq.PoolTSV",
+            "file_type": "KBasePoolTSV.PoolFile",
             "poolfile": res_handle["hid"],
             # below should be shock
             "handle_type": res_handle["type"],
@@ -116,7 +118,6 @@ class poolfileuploadUtil:
             "genome_ref",
             "description",
             "run_method",
-            "workspace_name",
             "poolfile_name",
         ]:
             if p not in self.params:
