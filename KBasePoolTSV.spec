@@ -30,7 +30,7 @@ module KBasePoolTSV {
     typedef list<col_header> col_list;
     
     /*
-    file_type - KBaseRBTnSeq.PoolTSV, the name of the file type.
+    file_type - KBasePoolTSV.PoolFile, the name of the file type.
     poolfile - handle that allows to download file, and get info re. shock node, shock url,
     handle_type - the type of the handle. This should always be ‘shock’.
     shock_url - the url of the shock server
@@ -75,8 +75,8 @@ module KBasePoolTSV {
     
     
     /*
-    file_type KBaseRBTnSeq.PoolCount
-    handle_id will be poolcount
+    file_type KBasePoolTSV.PoolCount
+    handle_id will be poolcount file handle
     col_list column_header_list will be
         barcode, rcbarcode, scaffold, strand, pos, and an unknown number of columns
     
