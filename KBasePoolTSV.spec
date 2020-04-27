@@ -54,7 +54,7 @@ module KBasePoolTSV {
     @metadata ws run_method as run_method
     @metadata ws shock_url as shock_url
     @metadata ws shock_node_id as shock_node_id
-    @metadata ws num_lines as num_lines
+    @metadata ws num_lines 
     @metadata ws related_genome_ref as related_genome_ref
     @metadata ws related_organism_scientific_name as related_organism_scientific_name
     @metadata ws description
@@ -103,6 +103,7 @@ module KBasePoolTSV {
     @metadata ws related_genome_ref as related_genome_ref
     @metadata ws related_organism_scientific_name as related_organism_scientific_name
     @metadata ws description
+    @metadata ws num_lines
     */
     typedef structure {
 
@@ -152,6 +153,7 @@ module KBasePoolTSV {
     @metadata ws related_genome_ref as related_genome_ref
     @metadata ws related_organism_scientific_name as related_organism_scientific_name
     @metadata ws description
+    @metadata ws num_lines
     */
     typedef structure {
 

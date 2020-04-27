@@ -1,4 +1,4 @@
-import os
+emport os
 import logging
 import re
 import shutil
@@ -37,7 +37,7 @@ class expsfileuploadUtil:
             description,
             expsfile_name
         """
-        
+
         print("params: ", self.params)
         self.validate_import_expsfile_from_staging_params()
 
@@ -85,7 +85,7 @@ class expsfileuploadUtil:
             "compression_type": "gzip",
             "file_name": res_handle["file_name"],
             "column_header_list": column_header_list,
-            "num_lines": str(num_rows)
+            "num_lines": str(num_rows),
             "related_genome_ref": self.params["genome_ref"],
             "related_organism_scientific_name": self.get_genome_organism_name(
                 self.params["genome_ref"]
@@ -134,18 +134,17 @@ class expsfileuploadUtil:
                 raise ValueError('"{}" parameter is required, but missing'.format(p))
 
     def check_exps_file(self, expsfile_fp):
-        
-        read_table_list_input = [
-        "SetName",
-        "Index",
-        "Description",
-        "Date_pool_expt_started"
+
+        required = [
+            "SetName",
+            "Index",
+            "Description",
+            "Date_pool_expt_started",
         ]
-        
+
         cols, num_rows = self.read_table(expsfile_fp, required)
 
         return [cols, num_rows]
-
 
     def read_table(self, fp, required):
         """
@@ -174,40 +173,34 @@ class expsfileuploadUtil:
             cols_dict[cols[i]] = i
         for field in required:
             if field not in cols_dict:
-                raise Exception("No field {} in {}. Must include fields".format(
-                    field, fp) + "\n{}".format(" ".join(required)))
+                raise Exception(
+                    "No field {} in {}. Must include fields".format(field, fp)
+                    + "\n{}".format(" ".join(required))
+                )
         rows = []
-        for i in range (1, len(file_list)):
+        for i in range(1, len(file_list)):
             line = file_list[i]
             # if last line empty
             if len(line) == 0:
                 continue
-            line = re.sub(r'[\r\n]+$', '', line)
+            line = re.sub(r"[\r\n]+$", "", line)
             split_line = line.split("\t")
             if not len(split_line) == len(cols):
-                raise Exception("Wrong number of columns in:\n{}\nin {} l:{}".format(
-                    line, fp, i))
+                raise Exception(
+                    "Wrong number of columns in:\n{}\nin {} l:{}".format(line, fp, i)
+                )
             new_dict = {}
             for i in range(len(cols)):
                 new_dict[cols[i]] = split_line[i]
             rows.append(new_dict)
-    
-        return [cols, len(file_list)] 
 
-
+        return [cols, len(file_list)]
 
     def get_genome_organism_name(self, genome_ref):
         # Getting the organism name using WorkspaceClient
-        ws = self.params['ws_obj'] 
+        ws = self.params["ws_obj"]
         res = ws.get_objects2(
-            {
-                "objects": [
-                    {
-                        "ref": genome_ref,
-                        "included": ["scientific_name"],
-                    }
-                ]
-            }
+            {"objects": [{"ref": genome_ref, "included": ["scientific_name"]}]}
         )
         scientific_name = res["data"][0]["data"]["scientific_name"]
         return scientific_name
