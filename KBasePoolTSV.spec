@@ -168,7 +168,7 @@ module KBasePoolTSV {
         string related_organism_scientific_name;
         string description;
 
-    } Experiments
+    } Experiments;
 
 };
 
