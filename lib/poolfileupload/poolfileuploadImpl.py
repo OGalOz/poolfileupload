@@ -3,6 +3,8 @@
 import logging
 import os
 from Utils.poolfileuploadUtilClient import poolfileuploadUtil
+from Utils.expsfileuploadUtilClient import expsfileuploadUtil
+from Utils.poolcountfileuploadUtilClient import poolcountfileuploadUtil
 from installed_clients.KBaseReportClient import KBaseReport
 from installed_clients.WorkspaceClient import Workspace
 #END_HEADER
@@ -57,10 +59,24 @@ class poolfileupload:
         token = os.environ.get('KB_AUTH_TOKEN', None)
         ws = Workspace(self.ws_url, token=token)
         params['ws_obj'] = ws
-        pfu = poolfileuploadUtil(params)
-        result = pfu.upload_poolfile()
 
-        text_message = "Finished uploading pool file \n"
+        if 'pool_file_type' not in params:
+            raise Exception("Did not get param pool_file_type")
+        else:
+            pft = params['pool_file_type']
+            if pft == 'poolfile':
+                pfu = poolfileuploadUtil(params)
+                result = pfu.upload_poolfile()
+            elif pft == 'poolcount':
+                pcfu = poolcountfileuploadUtil(params)
+                result = pcfu.upload_poolcountfile()
+            elif pft == 'experiment':
+                expsfu = expsfileuploadUtil(params)
+                result = expsfu.upload_expsfile()
+            else:
+                raise Exception("Did not recognize pool_file_type for upload")
+
+        text_message = "Finished uploading file \n"
         text_message += "{} saved as {} on {}\n".format(result['Name'],
                         result['Type'], result['Date'])
 

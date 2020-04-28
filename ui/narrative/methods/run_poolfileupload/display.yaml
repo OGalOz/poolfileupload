@@ -40,6 +40,15 @@ parameters :
             The Genome to which this pool file corresponds
         long-hint : |
             The Genome to which the pool file corresponds.
+    pool_file_type :
+        ui-name : |
+            File Type
+        short-hint : |
+            Which type of TSV file are you uploading?
+        long-hint : |
+            There are three primary types of TSV files transferred between 
+            programs in RBTnSeq. You are allowed to upload them as long as they
+            follow a certain format.
     description :
         ui-name : |
             Description
