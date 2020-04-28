@@ -88,6 +88,7 @@ module KBasePoolTSV {
     shock_node_id - the id of the shock node in the server
     compression_type - the type of compression used
     file_name - the name of the file
+    set_name - the name of the set
     num_lines - the number of lines in the file - keeps track of the general size
     run_method - keeps track of what poolfile is initially used for,
         for now it will always be "poolcount"
@@ -100,6 +101,7 @@ module KBasePoolTSV {
     @metadata ws run_method as run_method
     @metadata ws shock_url as shock_url
     @metadata ws shock_node_id as shock_node_id
+    @metadata ws set_name
     @metadata ws related_genome_ref as related_genome_ref
     @metadata ws related_organism_scientific_name as related_organism_scientific_name
     @metadata ws description
@@ -115,6 +117,7 @@ module KBasePoolTSV {
         string shock_node_id;
         string compression_type;
         string file_name;
+        string set_name;
         string num_lines;
         string run_method;
         genome_ref related_genome_ref;
