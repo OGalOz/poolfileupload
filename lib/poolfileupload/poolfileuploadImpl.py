@@ -75,7 +75,7 @@ class poolfileupload:
             elif pft == 'poolcount':
                 pcfu = poolcountfileuploadUtil(params)
                 result = pcfu.upload_poolcountfile()
-            elif pft == 'experiment':
+            elif pft == 'experiments':
                 expsfu = expsfileuploadUtil(params)
                 result = expsfu.upload_expsfile()
             else:
