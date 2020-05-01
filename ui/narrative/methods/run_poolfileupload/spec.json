@@ -11,7 +11,7 @@
     },
     "parameters": [
         {
-            "id": "staging_file_subdir_path",
+            "id": "staging_file_name",
             "optional": false,
             "advanced": false,
             "allow_multiple": false,
@@ -88,7 +88,7 @@
             }
         },
         {
-            "id": "poolfile_name",
+            "id": "output_name",
             "optional": false,
             "advanced": false,
             "allow_multiple": false,
@@ -131,12 +131,12 @@
                     "target_property": "run_method"
                 },
                 {
-                    "input_parameter": "staging_file_subdir_path",
-                    "target_property": "staging_file_subdir_path"
+                    "input_parameter": "staging_file_name",
+                    "target_property": "staging_file_name"
                 },
                 {
-                    "input_parameter": "poolfile_name",
-                    "target_property": "poolfile_name"
+                    "input_parameter": "output_name",
+                    "target_property": "output_name"
                 }
             ],
             "output_mapping": [
