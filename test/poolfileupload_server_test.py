@@ -64,17 +64,22 @@ class poolfileuploadTest(unittest.TestCase):
         # Check returned data with
         # self.assertEqual(ret[...], ...) or other unittest methods
 
-        staging_filename = "feba_148_pool.n10"
-        genome_ref = "39774/8/1"
+        staging_file_name = "FEBA_BarSeq.tsv"
+        genome_ref = "49371/5/1"
         description = "Testing module"
-        run_method = "poolcount"
+        run_method = "barseqR"
         output_name = "initial_testing_output"
+        
+        #pool_file_type is one of 
+        # poolfile, poolcount, experiment
+        pool_file_type = 'experiment'
 
         ret = self.serviceImpl.run_poolfileupload(self.ctx, 
                 {'workspace_name': self.wsName,
-                'staging_file_name': staging_filename,
+                'staging_file_name': staging_file_name,
                 'genome_ref': genome_ref,
                 'description': description,
                 'run_method': run_method,
-                'output_name': poolfile_name
+                'pool_file_type': pool_file_type,
+                'output_name': output_name
                 })

@@ -48,7 +48,7 @@ parameters :
         long-hint : |
             There are three primary types of TSV files transferred between 
             programs in RBTnSeq. You are allowed to upload them as long as they
-            follow a certain format.
+            follow a certain format. Poolfile, PoolCount, Experiments.
     description :
         ui-name : |
             Description

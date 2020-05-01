@@ -1,6 +1,6 @@
 /*
-This module is for storing Pool Files, PoolCount Files, and Experiment Files 
-as used in Random Barcode Transposon Sequencing (RBTnSeq)
+This module is for storing Pool Files and PoolCount Files as used in 
+Random Barcode Transposon Sequencing (RBTnSeq)
 Apps: Design Random Pool, Reads to PoolCount, BarSeqR
 */
 module KBasePoolTSV {
@@ -56,7 +56,6 @@ module KBasePoolTSV {
         for now it will always be "poolcount"
     related_genome_ref -  the genome which is related to the pool file.
     related_organism_scientific_name -  the related scientific_name from the genome_ref
-    fastqs_used - the fastqs which were used to create the poolfile
     description - A description given by the uploader as to what the
         pool file means.
     
@@ -82,7 +81,7 @@ module KBasePoolTSV {
         string run_method;
         genome_ref related_genome_ref;
         string related_organism_scientific_name;
-        fastqs fastqs_used; 
+        fastq_refs 
         string description;
     
     } PoolFile;
@@ -105,8 +104,6 @@ module KBasePoolTSV {
         for now it will always be "poolcount"
     related_genome_ref -  the genome which is related to the pool file.
     related_organism_scientific_name -  the related scientific_name from the genome_ref
-    fastqs_used - the fastqs used to create the poolcount file
-    poolfile_ref - the ref for the poolfile used to create the poolcount file
     description - A description given by the uploader as to what the
         pool file means.
     
@@ -135,8 +132,6 @@ module KBasePoolTSV {
         string run_method;
         genome_ref related_genome_ref;
         string related_organism_scientific_name;
-        fastqs fastqs_used; 
-        string poolfile_ref;
         string description;
     
     } PoolCount;

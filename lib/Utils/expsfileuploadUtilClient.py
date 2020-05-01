@@ -1,4 +1,4 @@
-emport os
+import os
 import logging
 import re
 import shutil
@@ -26,26 +26,26 @@ class expsfileuploadUtil:
         Find the expsfile in /staging/expsfile_name
         Get the output name for the expsfile
         Get the column headers for the exps file for
-            data and testing purposes. Should be len 12.
+            data and testing purposes. 
         Test if expsfile is well-formed.
         We send the file to shock using dfu.
         We get the handle and save the object with all
             the necessary information- including related genome.
         params should include:
-            staging_file_path,
+            staging_file_name,
             genome_ref,
             description,
-            expsfile_name
+            output_name
         """
 
         print("params: ", self.params)
         self.validate_import_expsfile_from_staging_params()
 
         # Name of file in staging: (file name or absolute path?)
-        staging_exps_fp_name = self.params["staging_file_path"]
+        staging_exps_fp_name = self.params["staging_file_name"]
 
         # Output name of exps file:
-        expsfile_name = self.params["expsfile_name"]
+        expsfile_name = self.params["output_name"]
 
         print("expsfile_name: ", expsfile_name)
         print("top dir /:", os.listdir("/"))
@@ -59,7 +59,8 @@ class expsfileuploadUtil:
         expsfile_fp = os.path.join(self.staging_folder, staging_exps_fp_name)
 
         # We check correctness of exps file. Returns list and int
-        column_header_list, num_rows = self.check_exps_file(expsfile_fp)
+        column_header_list, num_rows, setNames = self.check_exps_file(
+                                                                    expsfile_fp)
 
         # We copy the file from staging to scratch
         new_exps_fp = os.path.join(self.shared_folder, expsfile_name)
@@ -116,19 +117,13 @@ class expsfileuploadUtil:
         }
 
     def validate_import_expsfile_from_staging_params(self):
-        """
-        params should include:
-        staging_file_path,
-        genome_ref,
-        description,
-        expsfile_name
-        """
+
         # check for required parameters
         for p in [
-            "staging_file_subdir_path",
+            "staging_file_name",
             "genome_ref",
             "description",
-            "expsfile_name",
+            "output_name"
         ]:
             if p not in self.params:
                 raise ValueError('"{}" parameter is required, but missing'.format(p))
@@ -142,9 +137,9 @@ class expsfileuploadUtil:
             "Date_pool_expt_started",
         ]
 
-        cols, num_rows = self.read_table(expsfile_fp, required)
+        cols, num_rows, setNames = self.read_table(expsfile_fp, required)
 
-        return [cols, num_rows]
+        return [cols, num_rows, setNames]
 
     def read_table(self, fp, required):
         """
@@ -178,6 +173,8 @@ class expsfileuploadUtil:
                     + "\n{}".format(" ".join(required))
                 )
         rows = []
+        # This is unique to Experiments
+        setNames = []
         for i in range(1, len(file_list)):
             line = file_list[i]
             # if last line empty
@@ -185,6 +182,7 @@ class expsfileuploadUtil:
                 continue
             line = re.sub(r"[\r\n]+$", "", line)
             split_line = line.split("\t")
+            setNames.append(split_line[0])
             if not len(split_line) == len(cols):
                 raise Exception(
                     "Wrong number of columns in:\n{}\nin {} l:{}".format(line, fp, i)
@@ -194,7 +192,7 @@ class expsfileuploadUtil:
                 new_dict[cols[i]] = split_line[i]
             rows.append(new_dict)
 
-        return [cols, len(file_list)]
+        return [cols, len(file_list), setNames]
 
     def get_genome_organism_name(self, genome_ref):
         # Getting the organism name using WorkspaceClient

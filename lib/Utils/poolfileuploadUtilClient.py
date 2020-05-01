@@ -37,7 +37,7 @@ class poolfileuploadUtil:
         self.validate_import_poolfile_from_staging_params()
 
         # Name of file in staging:
-        staging_pool_fp_name = self.params["staging_file_subdir_path"]
+        staging_pool_fp_name = self.params["staging_file_name"]
 
         # Output name of pool file:
         poolfile_name = self.params["poolfile_name"]
@@ -114,11 +114,11 @@ class poolfileuploadUtil:
     def validate_import_poolfile_from_staging_params(self):
         # check for required parameters
         for p in [
-            "staging_file_subdir_path",
+            "staging_file_name",
             "genome_ref",
             "description",
             "run_method",
-            "poolfile_name",
+            "output_name"
         ]:
             if p not in self.params:
                 raise ValueError('"{}" parameter is required, but missing'.format(p))

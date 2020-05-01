@@ -4,7 +4,8 @@ import logging
 import os
 from Utils.poolfileuploadUtilClient import poolfileuploadUtil
 from Utils.expsfileuploadUtilClient import expsfileuploadUtil
-from Utils.poolcountfileuploadUtilClient import poolcountfileuploadUtil
+from Utils.poolcountuploadUtilClient import poolcountfileuploadUtil
+from Utils.funcs import check_output_name
 from installed_clients.KBaseReportClient import KBaseReport
 from installed_clients.WorkspaceClient import Workspace
 #END_HEADER
@@ -59,6 +60,10 @@ class poolfileupload:
         token = os.environ.get('KB_AUTH_TOKEN', None)
         ws = Workspace(self.ws_url, token=token)
         params['ws_obj'] = ws
+
+
+        params['output_name'] = check_output_name(params['output_name'])
+
 
         if 'pool_file_type' not in params:
             raise Exception("Did not get param pool_file_type")
