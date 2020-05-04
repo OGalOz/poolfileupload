@@ -20,12 +20,12 @@ module KBasePoolTSV {
     /*
     @id ws KBaseFile.SingleEndLibrary 
     */
-    typedef fastq_ref;
+    typedef string fastq_ref;
    
     /*
     A list of fastq_refs
     */
-    typedef list<fastq_ref> fastqs
+    typedef list<fastq_ref> fastqs;
 
     /*
     A header for a  column
