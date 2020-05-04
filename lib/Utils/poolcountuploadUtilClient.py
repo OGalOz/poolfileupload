@@ -19,7 +19,6 @@ class poolcountfileuploadUtil:
         self.scratch_folder = os.path.join(params["shared_folder"], "scratch")
 
     def upload_poolcountfile(self):
-        raise Exception("INCOMPLETE - DO NOT USE")
 
         """
         The upload method
@@ -37,44 +36,40 @@ class poolcountfileuploadUtil:
 
         """
         print("params: ", self.params)
-        self.validate_import_poolfile_from_staging_params()
+        self.validate_import_file_from_staging_params()
 
-        # Name of file in staging:
-        staging_pool_fp_name = self.params["staging_file_name"]
+        # Name of file in staging (Not path):
+        staging_fp_name = self.params["staging_file_name"]
 
         # Output name of poolcount file:
         poolcount_name = self.params["output_name"]
 
-        print("poolfile_name: ", poolcount_name)
+        print("Output pool count name: ", poolcount_name)
         if not os.path.exists(self.staging_folder):
             raise Exception("Staging dir does not exist yet!")
         else:
             print("Succesfully recognized staging directory")
 
-        # This is the path to the pool file
-        poolfile_fp = os.path.join(self.staging_folder, staging_pool_fp_name)
-        # We check correctness of pool file
-        column_header_list = self.check_pool_file(poolfile_fp)
-        if len(column_header_list) != 12:
-            print(
-                "WARNING: Number of columns is not 12 as expected: {}".format(
-                    len(column_header_list)
-                )
-            )
+        # This is the path to the pool file in staging
+        poolcount_fp = os.path.join(self.staging_folder, staging_fp_name)
+        # We check correctness of pool file in staging
+        column_header_list = self.check_pool_file(poolcount_fp)
+
         # We copy the file from staging to scratch
-        new_pool_fp = os.path.join(self.shared_folder, poolfile_name)
-        shutil.copyfile(poolfile_fp, new_pool_fp)
-        poolfile_fp = new_pool_fp
+        new_pc_fp = os.path.join(self.shared_folder, poolfile_name)
+        shutil.copyfile(poolcount_fp, new_pc_fp)
+        #poolfile_fp is location of pool file in scratch
+        poolfile_fp = new_pc_fp
 
 
         # We create the KBase handle for the object:
-        file_to_shock_result =self.dfu.file_to_shock(
-            {"file_path": self.params['poolcount_fp'], "make_handle": True, "pack": "gzip"}
+        file_to_shock_result = self.dfu.file_to_shock(
+            {"file_path": poolfile_fp, "make_handle": True, "pack": "gzip"}
         )
         # The following var res_handle only created for simplification of code
         res_handle = file_to_shock_result["handle"]
 
-        # We create a better Description by adding date time and username
+        # Keep track of our own datetime
         date_time = datetime.datetime.utcnow()
         #new_desc = "Uploaded by {} on (UTC) {} using Uploader. User Desc: ".format(
         #        self.params['username'], str(date_time))
@@ -100,7 +95,7 @@ class poolcountfileuploadUtil:
                 self.params["genome_ref"],
                 self.params['ws_obj']
             ),
-            "description": "Manual Upload" + self.params["poolcount_description"],
+            "description": "Manual Upload: " + self.params["poolcount_description"],
         }
     
         # To get workspace id:
@@ -140,6 +135,9 @@ class poolcountfileuploadUtil:
         f_list = f_str.split('\n')
         num_lines = len(f_list)
         header_line = f_list[0]
+
+        # Dropping f_str from memory
+        f_str = None
     
     
         if header_line == '':
@@ -156,7 +154,7 @@ class poolcountfileuploadUtil:
                         )
         return [fields, num_lines]
 
-    def validate_import_poolfile_from_staging_params(self):
+    def validate_import_file_from_staging_params(self):
         # check for required parameters
         for p in [
             "username",
