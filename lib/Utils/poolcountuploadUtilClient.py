@@ -123,7 +123,7 @@ class poolcountfileuploadUtil:
         }
     
 
-    def check_poolcount_file(poolcount_fp):
+    def check_poolcount_file(self, poolcount_fp):
         """
         We check the pool file by initializing into dict format
    
