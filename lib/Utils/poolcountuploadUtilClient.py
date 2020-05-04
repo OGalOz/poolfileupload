@@ -1,6 +1,5 @@
 import os
 import logging
-import re
 import shutil
 import datetime
 from installed_clients.DataFileUtilClient import DataFileUtil
@@ -55,7 +54,7 @@ class poolcountfileuploadUtil:
         # This is the path to the pool file in staging
         poolcount_fp = os.path.join(self.staging_folder, staging_fp_name)
         # We check correctness of pool file in staging
-        column_header_list = self.check_poolcount_file(poolcount_fp)
+        column_header_list, num_lines = self.check_poolcount_file(poolcount_fp)
 
         # We copy the file from staging to scratch
         new_pc_fp = os.path.join(self.shared_folder, poolcount_name)
@@ -93,7 +92,7 @@ class poolcountfileuploadUtil:
             "set_name": self.params['output_name'], 
             "num_lines": str(num_lines),
             "related_genome_ref": self.params["genome_ref"],
-            "related_organism_scientific_name": get_genome_organism_name(
+            "related_organism_scientific_name": self.get_genome_organism_name(
                 self.params["genome_ref"],
                 self.params['ws_obj']
             ),
