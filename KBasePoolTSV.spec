@@ -37,6 +37,7 @@ module KBasePoolTSV {
     The list of column headers
     */
     typedef list<col_header> col_list;
+
     
     /*
     file_type - KBasePoolTSV.PoolFile, the name of the file type.
@@ -58,7 +59,8 @@ module KBasePoolTSV {
     fastqs_used - the fastqs which were used to create the poolfile
     description - A description given by the uploader as to what the
         pool file means.
-   
+    
+    @optional fastqs_used
     @metadata ws utc_created as utc_created
     @metadata ws handle_type as handle_type
     @metadata ws shock_url as shock_url
@@ -90,7 +92,6 @@ module KBasePoolTSV {
     /*
     file_type KBasePoolTSV.PoolCount
     handle_id will be poolcount file handle
-
     handle_type - the type of the handle. This should always be ‘shock’.
     col_list column_header_list will be
         barcode, rcbarcode, scaffold, strand, pos, and an unknown number of columns
@@ -108,6 +109,7 @@ module KBasePoolTSV {
     description - A description given by the uploader as to what the
         pool file means.
     
+    @optional poolfile_ref fastqs_used
     @metadata ws utc_created as utc_created
     @metadata ws handle_type as handle_type
     @metadata ws shock_url as shock_url
@@ -164,6 +166,7 @@ module KBasePoolTSV {
     description - A description given by the uploader as to what the
         pool file means.
 
+    @optional poolfile_ref
     @metadata ws utc_created as utc_created
     @metadata ws handle_type as handle_type
     @metadata ws shock_url as shock_url
@@ -187,6 +190,7 @@ module KBasePoolTSV {
         string num_lines;
         genome_ref related_genome_ref;
         string related_organism_scientific_name;
+        string poolfile_ref;
         string description;
 
     } Experiments;
