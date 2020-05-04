@@ -60,6 +60,7 @@ class poolfileupload:
         token = os.environ.get('KB_AUTH_TOKEN', None)
         ws = Workspace(self.ws_url, token=token)
         params['ws_obj'] = ws
+        params['username'] = ctx['user_id']
 
 
         params['output_name'] = check_output_name(params['output_name'])

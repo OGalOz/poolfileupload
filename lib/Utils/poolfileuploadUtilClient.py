@@ -2,6 +2,7 @@ import os
 import logging
 import re
 import shutil
+import datetime
 from installed_clients.DataFileUtilClient import DataFileUtil
 from installed_clients.WorkspaceClient import Workspace
 
@@ -70,6 +71,12 @@ class poolfileuploadUtil:
         # The following var res_handle only created for simplification of code
         res_handle = file_to_shock_result["handle"]
 
+        # We create a better Description by adding date time and username
+        date_time = datetime.datetime.utcnow()
+        new_desc = "Uploaded by {} on (UTC) {} using Uploader\n".format(
+                self.params['username'], str(date_time))
+        fastq_refs = ["Manual Upload"]
+
         # We create the data for the object
         pool_data = {
             "file_type": "KBasePoolTSV.PoolFile",
@@ -80,13 +87,14 @@ class poolfileuploadUtil:
             "shock_node_id": res_handle["id"],
             "compression_type": "gzip",
             "column_header_list": column_header_list,
+            "fastqs_used": fastq_refs,
             "file_name": res_handle["file_name"],
-            "run_method": self.params["run_method"],
+            "utc_created": str(date_time),
             "related_genome_ref": self.params["genome_ref"],
             "related_organism_scientific_name": self.get_genome_organism_name(
                 self.params["genome_ref"]
             ),
-            "description": self.params["description"],
+            "description": new_desc + self.params["description"],
         }
 
         # To get workspace id:
@@ -114,10 +122,10 @@ class poolfileuploadUtil:
     def validate_import_poolfile_from_staging_params(self):
         # check for required parameters
         for p in [
+            "username",
             "staging_file_name",
             "genome_ref",
             "description",
-            "run_method",
             "output_name"
         ]:
             if p not in self.params:

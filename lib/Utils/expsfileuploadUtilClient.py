@@ -32,6 +32,7 @@ class expsfileuploadUtil:
         We get the handle and save the object with all
             the necessary information- including related genome.
         params should include:
+            username,
             staging_file_name,
             genome_ref,
             description,
@@ -75,6 +76,11 @@ class expsfileuploadUtil:
         # The following var res_handle only created for simplification of code
         res_handle = file_to_shock_result["handle"]
 
+        # We create a better Description by adding date time and username
+        date_time = datetime.datetime.utcnow()
+        new_desc = "Uploaded by {} on (UTC) {} using Uploader\n".format(
+                self.params['username'], str(date_time))
+
         # We create the data for the object
         exps_data = {
             "file_type": "KBasePoolTSV.Experiments",
@@ -85,13 +91,14 @@ class expsfileuploadUtil:
             "shock_node_id": res_handle["id"],
             "compression_type": "gzip",
             "file_name": res_handle["file_name"],
+            "utc_created": str(date_time),
             "column_header_list": column_header_list,
             "num_lines": str(num_rows),
             "related_genome_ref": self.params["genome_ref"],
             "related_organism_scientific_name": self.get_genome_organism_name(
                 self.params["genome_ref"]
             ),
-            "description": self.params["description"],
+            "description": new_desc + self.params["description"],
         }
 
         # To get workspace id:
@@ -120,6 +127,7 @@ class expsfileuploadUtil:
 
         # check for required parameters
         for p in [
+            "username",
             "staging_file_name",
             "genome_ref",
             "description",

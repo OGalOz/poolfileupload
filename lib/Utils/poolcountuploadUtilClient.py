@@ -72,7 +72,13 @@ class poolcountfileuploadUtil:
         )
         # The following var res_handle only created for simplification of code
         res_handle = file_to_shock_result["handle"]
-    
+
+        # We create a better Description by adding date time and username
+        date_time = datetime.datetime.utcnow()
+        new_desc = "Uploaded by {} on (UTC) {} using Uploader\n".format(
+                self.params['username'], str(date_time))
+        fastq_refs = ["Manual Upload"]
+
         # We create the data for the object
         pool_data = {
             "file_type": "KBasePoolTSV.PoolCount",
@@ -83,8 +89,9 @@ class poolcountfileuploadUtil:
             "shock_node_id": res_handle["id"],
             "compression_type": "gzip",
             "column_header_list": column_header_list,
+            "fastqs_used": fastq_refs,
             "file_name": res_handle["file_name"],
-            "run_method": up["run_method"],
+            "utc_created": str(date_time),
             "set_name": up['set_name'], 
             "num_lines": str(num_lines),
             "related_genome_ref": up["genome_ref"],
@@ -92,7 +99,7 @@ class poolcountfileuploadUtil:
                 up["genome_ref"],
                 up['ws_obj']
             ),
-            "description": up["poolcount_description"],
+            "description": new_desc + up["poolcount_description"],
         }
     
         # To get workspace id:
@@ -117,66 +124,6 @@ class poolcountfileuploadUtil:
             "Date": dfu_object_info[3],
         }
     
-    
-
-
-
-
-
-
-
-
-
-
-
-        #---------------------------------------------------------
-        # We create the handle for the object:
-        file_to_shock_result = self.dfu.file_to_shock(
-            {"file_path": poolfile_fp, "make_handle": True, "pack": "gzip"}
-        )
-        # The following var res_handle only created for simplification of code
-        res_handle = file_to_shock_result["handle"]
-
-        # We create the data for the object
-        pool_data = {
-            "file_type": "KBasePoolTSV.PoolFile",
-            "poolfile": res_handle["hid"],
-            # below should be shock
-            "handle_type": res_handle["type"],
-            "shock_url": res_handle["url"],
-            "shock_node_id": res_handle["id"],
-            "compression_type": "gzip",
-            "column_header_list": column_header_list,
-            "file_name": res_handle["file_name"],
-            "run_method": self.params["run_method"],
-            "related_genome_ref": self.params["genome_ref"],
-            "related_organism_scientific_name": self.get_genome_organism_name(
-                self.params["genome_ref"]
-            ),
-            "description": self.params["description"],
-        }
-
-        # To get workspace id:
-        ws_id = self.params["workspace_id"]
-        save_object_params = {
-            "id": ws_id,
-            "objects": [
-                {
-                    "type": "KBasePoolTSV.PoolFile",
-                    "data": pool_data,
-                    "name": poolfile_name,
-                }
-            ],
-        }
-        # save_objects returns a list of object_infos
-        dfu_object_info = self.dfu.save_objects(save_object_params)[0]
-        print("dfu_object_info: ")
-        print(dfu_object_info)
-        return {
-            "Name": dfu_object_info[1],
-            "Type": dfu_object_info[2],
-            "Date": dfu_object_info[3],
-        }
 
     def check_poolcount_file(poolcount_fp):
         """
@@ -212,10 +159,10 @@ class poolcountfileuploadUtil:
     def validate_import_poolfile_from_staging_params(self):
         # check for required parameters
         for p in [
+            "username",
             "staging_file_name",
             "genome_ref",
             "description",
-            "run_method",
             "output_name",
         ]:
             if p not in self.params:

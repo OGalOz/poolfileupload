@@ -46,22 +46,21 @@ module KBasePoolTSV {
     shock_node_id - the id of the shock node in the server
     compression_type - the type of compression used
     file_name - the name of the file
+    utc_created - the Coordinated Universal Time of creation
     column_header_list - a list of the headers of the columns, the length of this 
         list should be the num of columns in the file. Currently: 
         <"barcode", "rcbarcode", "nTot", "n", "scaffold", "strand", 
         "pos", "n2", "scaffold2", "strand2", "pos2", "nPastEnd">
         making a total of 12 columns.
     num_lines - the number of lines in the file - keeps track of the general size
-    run_method - keeps track of what poolfile is initially used for,
-        for now it will always be "poolcount"
     related_genome_ref -  the genome which is related to the pool file.
     related_organism_scientific_name -  the related scientific_name from the genome_ref
     fastqs_used - the fastqs which were used to create the poolfile
     description - A description given by the uploader as to what the
         pool file means.
-    
+   
+    @metadata ws utc_created as utc_created
     @metadata ws handle_type as handle_type
-    @metadata ws run_method as run_method
     @metadata ws shock_url as shock_url
     @metadata ws shock_node_id as shock_node_id
     @metadata ws num_lines 
@@ -77,9 +76,9 @@ module KBasePoolTSV {
         string shock_node_id;
         string compression_type;
         string file_name;
+        string utc_created;
         col_list column_header_list;
         string num_lines;
-        string run_method;
         genome_ref related_genome_ref;
         string related_organism_scientific_name;
         fastqs fastqs_used; 
@@ -99,10 +98,9 @@ module KBasePoolTSV {
     shock_node_id - the id of the shock node in the server
     compression_type - the type of compression used
     file_name - the name of the file
+    utc_created - the Coordinated Universal Time of creation
     set_name - the name of the set
     num_lines - the number of lines in the file - keeps track of the general size
-    run_method - keeps track of what poolfile is initially used for,
-        for now it will always be "poolcount"
     related_genome_ref -  the genome which is related to the pool file.
     related_organism_scientific_name -  the related scientific_name from the genome_ref
     fastqs_used - the fastqs used to create the poolcount file
@@ -110,8 +108,8 @@ module KBasePoolTSV {
     description - A description given by the uploader as to what the
         pool file means.
     
+    @metadata ws utc_created as utc_created
     @metadata ws handle_type as handle_type
-    @metadata ws run_method as run_method
     @metadata ws shock_url as shock_url
     @metadata ws shock_node_id as shock_node_id
     @metadata ws set_name
@@ -130,9 +128,9 @@ module KBasePoolTSV {
         string shock_node_id;
         string compression_type;
         string file_name;
+        string utc_created;
         string set_name;
         string num_lines;
-        string run_method;
         genome_ref related_genome_ref;
         string related_organism_scientific_name;
         fastqs fastqs_used; 
@@ -159,12 +157,14 @@ module KBasePoolTSV {
     shock_node_id - the id of the shock node in the server
     compression_type - the type of compression used
     file_name - the name of the file
+    utc_created - the Coordinated Universal Time of creation
     num_lines - the number of lines in the file - keeps track of the general size
     related_genome_ref -  the genome which is related to the pool file.
     related_organism_scientific_name -  the related scientific_name from the genome_ref
     description - A description given by the uploader as to what the
         pool file means.
 
+    @metadata ws utc_created as utc_created
     @metadata ws handle_type as handle_type
     @metadata ws shock_url as shock_url
     @metadata ws shock_node_id as shock_node_id
@@ -182,6 +182,7 @@ module KBasePoolTSV {
         string shock_node_id;
         string compression_type;
         string file_name;
+        string utc_created;
         col_list column_header_list;
         string num_lines;
         genome_ref related_genome_ref;
