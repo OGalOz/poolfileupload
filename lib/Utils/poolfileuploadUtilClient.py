@@ -87,7 +87,7 @@ class poolfileuploadUtil:
             "shock_node_id": res_handle["id"],
             "compression_type": "gzip",
             "column_header_list": column_header_list,
-            "num_lines": num_lines,
+            "num_lines": str(num_lines),
             "fastqs_used": fastq_refs,
             "file_name": res_handle["file_name"],
             "utc_created": str(date_time),
