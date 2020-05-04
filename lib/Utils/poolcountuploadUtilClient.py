@@ -34,7 +34,11 @@ class poolcountfileuploadUtil:
         We send the file to shock using dfu.
         We get the handle and save the object with all
             the necessary information- including related genome.
-
+        params should include:
+            output_name,
+            staging_file_name,
+            ws_obj,
+            poolcount_name,
         """
         print("params: ", self.params)
         self.validate_import_file_from_staging_params()
@@ -93,8 +97,7 @@ class poolcountfileuploadUtil:
             "num_lines": str(num_lines),
             "related_genome_ref": self.params["genome_ref"],
             "related_organism_scientific_name": self.get_genome_organism_name(
-                self.params["genome_ref"],
-                self.params['ws_obj']
+                self.params["genome_ref"]
             ),
             "description": "Manual Upload: " + self.params["poolcount_description"],
         }
@@ -107,7 +110,7 @@ class poolcountfileuploadUtil:
                 {
                     "type": "KBasePoolTSV.PoolCount",
                     "data": poolcount_data,
-                    "name": self.params['poolcount_name'],
+                    "name": self.params['output_name'],
                 }
             ],
         }
@@ -163,6 +166,7 @@ class poolcountfileuploadUtil:
             "genome_ref",
             "description",
             "output_name",
+            "ws_obj"
         ]:
             if p not in self.params:
                 raise ValueError('"{}" parameter is required, but missing'.format(p))
