@@ -58,15 +58,15 @@ class poolcountfileuploadUtil:
         column_header_list = self.check_poolcount_file(poolcount_fp)
 
         # We copy the file from staging to scratch
-        new_pc_fp = os.path.join(self.shared_folder, poolfile_name)
+        new_pc_fp = os.path.join(self.shared_folder, poolcount_name)
         shutil.copyfile(poolcount_fp, new_pc_fp)
-        #poolfile_fp is location of pool file in scratch
-        poolfile_fp = new_pc_fp
+        #poolcount_scratch_fp is location of pool file in scratch
+        poolcount_scratch_fp = new_pc_fp
 
 
         # We create the KBase handle for the object:
         file_to_shock_result = self.dfu.file_to_shock(
-            {"file_path": poolfile_fp, "make_handle": True, "pack": "gzip"}
+            {"file_path": poolcount_scratch_fp, "make_handle": True, "pack": "gzip"}
         )
         # The following var res_handle only created for simplification of code
         res_handle = file_to_shock_result["handle"]
@@ -78,7 +78,7 @@ class poolcountfileuploadUtil:
         fastq_refs = []
 
         # We create the data for the object
-        pool_data = {
+        poolcount_data = {
             "file_type": "KBasePoolTSV.PoolCount",
             "poolcount": res_handle["hid"],
             # below should be shock
@@ -107,7 +107,7 @@ class poolcountfileuploadUtil:
             "objects": [
                 {
                     "type": "KBasePoolTSV.PoolCount",
-                    "data": pool_data,
+                    "data": poolcount_data,
                     "name": self.params['poolcount_name'],
                 }
             ],
