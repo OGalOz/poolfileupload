@@ -20,6 +20,7 @@ running transposon sequencing.
 ---
 * Pool Count Files are TSV files with a certain number of columns (TBD)
 * The expected headers include: barcode, rcbarcode, scaffold, strand, pos 
+* IT IS VERY IMPORTANT THAT THE OUTPUT NAME IS EXACTLY THE SET NAME FOR THE EXPERIMENT.
 
 ---
 * The biological goal of the program suite is to quantify the abundance of each 
