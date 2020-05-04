@@ -38,7 +38,7 @@ class poolcountfileuploadUtil:
             output_name,
             staging_file_name,
             ws_obj,
-            poolcount_name,
+            workspace_id,
         """
         print("params: ", self.params)
         self.validate_import_file_from_staging_params()
@@ -99,7 +99,7 @@ class poolcountfileuploadUtil:
             "related_organism_scientific_name": self.get_genome_organism_name(
                 self.params["genome_ref"]
             ),
-            "description": "Manual Upload: " + self.params["poolcount_description"],
+            "description": "Manual Upload: " + self.params["description"],
         }
     
         # To get workspace id:
@@ -166,7 +166,8 @@ class poolcountfileuploadUtil:
             "genome_ref",
             "description",
             "output_name",
-            "ws_obj"
+            "ws_obj",
+            "workspace_id"
         ]:
             if p not in self.params:
                 raise ValueError('"{}" parameter is required, but missing'.format(p))
