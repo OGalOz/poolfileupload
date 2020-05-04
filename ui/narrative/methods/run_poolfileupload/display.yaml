@@ -66,9 +66,9 @@ parameters :
             choose one of the existing options. Currently the only option is Pool Count.
     output_name :
         ui-name : |
-            Pool File Name
+            Output File Name
         short-hint : |
-            Name your pool file. Avoid special characters
+            Name your file. Avoid special characters
         long-hint  : |
             This is the name of your pool file that will appear in the data column.
 
