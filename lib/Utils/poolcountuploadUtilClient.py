@@ -42,10 +42,10 @@ class poolcountfileuploadUtil:
         # Name of file in staging:
         staging_pool_fp_name = self.params["staging_file_name"]
 
-        # Output name of pool file:
-        poolfile_name = self.params["poolfile_name"]
+        # Output name of poolcount file:
+        poolcount_name = self.params["output_name"]
 
-        print("poolfile_name: ", poolfile_name)
+        print("poolfile_name: ", poolcount_name)
         if not os.path.exists(self.staging_folder):
             raise Exception("Staging dir does not exist yet!")
         else:
@@ -76,8 +76,8 @@ class poolcountfileuploadUtil:
 
         # We create a better Description by adding date time and username
         date_time = datetime.datetime.utcnow()
-        new_desc = "Uploaded by {} on (UTC) {} using Uploader\n".format(
-                self.params['username'], str(date_time))
+        #new_desc = "Uploaded by {} on (UTC) {} using Uploader. User Desc: ".format(
+        #        self.params['username'], str(date_time))
         fastq_refs = ["Manual Upload"]
 
         # We create the data for the object
@@ -100,7 +100,7 @@ class poolcountfileuploadUtil:
                 up["genome_ref"],
                 up['ws_obj']
             ),
-            "description": new_desc + up["poolcount_description"],
+            "description": up["poolcount_description"],
         }
     
         # To get workspace id:

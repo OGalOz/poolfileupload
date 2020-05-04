@@ -41,7 +41,7 @@ class poolfileuploadUtil:
         staging_pool_fp_name = self.params["staging_file_name"]
 
         # Output name of pool file:
-        poolfile_name = self.params["poolfile_name"]
+        poolfile_name = self.params["output_name"]
 
         print("poolfile_name: ", poolfile_name)
         print("top dir /:", os.listdir("/"))
@@ -73,8 +73,8 @@ class poolfileuploadUtil:
 
         # We create a better Description by adding date time and username
         date_time = datetime.datetime.utcnow()
-        new_desc = "Uploaded by {} on (UTC) {} using Uploader\n".format(
-                self.params['username'], str(date_time))
+        #new_desc = "Uploaded by {} on (UTC) {} using Uploader. User Desc: ".format(
+        #        self.params['username'], str(date_time))
         fastq_refs = ["Manual Upload"]
 
         # We create the data for the object
@@ -94,7 +94,7 @@ class poolfileuploadUtil:
             "related_organism_scientific_name": self.get_genome_organism_name(
                 self.params["genome_ref"]
             ),
-            "description": new_desc + self.params["description"],
+            "description": self.params["description"],
         }
 
         # To get workspace id:

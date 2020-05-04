@@ -79,8 +79,8 @@ class expsfileuploadUtil:
 
         # We create a better Description by adding date time and username
         date_time = datetime.datetime.utcnow()
-        new_desc = "Uploaded by {} on (UTC) {} using Uploader\n".format(
-                self.params['username'], str(date_time))
+        #new_desc = "Uploaded by {} on (UTC) {} using Uploader. User Desc: ".format(
+        #        self.params['username'], str(date_time))
 
         # We create the data for the object
         exps_data = {
@@ -99,7 +99,7 @@ class expsfileuploadUtil:
             "related_organism_scientific_name": self.get_genome_organism_name(
                 self.params["genome_ref"]
             ),
-            "description": new_desc + self.params["description"],
+            "description": self.params["description"],
         }
 
         # To get workspace id:
