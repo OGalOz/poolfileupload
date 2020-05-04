@@ -68,8 +68,8 @@ class poolcountfileuploadUtil:
 
 
         # We create the KBase handle for the object:
-        file_to_shock_result = up['dfu'].file_to_shock(
-            {"file_path": up['poolcount_fp'], "make_handle": True, "pack": "gzip"}
+        file_to_shock_result =self.dfu.file_to_shock(
+            {"file_path": self.params['poolcount_fp'], "make_handle": True, "pack": "gzip"}
         )
         # The following var res_handle only created for simplification of code
         res_handle = file_to_shock_result["handle"]
@@ -93,30 +93,30 @@ class poolcountfileuploadUtil:
             "fastqs_used": fastq_refs,
             "file_name": res_handle["file_name"],
             "utc_created": str(date_time),
-            "set_name": up['set_name'], 
+            "set_name": self.params['set_name'], 
             "num_lines": str(num_lines),
-            "related_genome_ref": up["genome_ref"],
+            "related_genome_ref": self.params["genome_ref"],
             "related_organism_scientific_name": get_genome_organism_name(
-                up["genome_ref"],
-                up['ws_obj']
+                self.params["genome_ref"],
+                self.params['ws_obj']
             ),
-            "description": up["poolcount_description"],
+            "description": self.params["poolcount_description"],
         }
     
         # To get workspace id:
-        ws_id = up["workspace_id"]
+        ws_id = self.params["workspace_id"]
         save_object_params = {
             "id": ws_id,
             "objects": [
                 {
                     "type": "KBasePoolTSV.PoolCount",
                     "data": pool_data,
-                    "name": up['poolcount_name'],
+                    "name": self.params['poolcount_name'],
                 }
             ],
         }
         # save_objects returns a list of object_infos
-        dfu_object_info = up['dfu'].save_objects(save_object_params)[0]
+        dfu_object_info = self.dfu.save_objects(save_object_params)[0]
         print("dfu_object_info: ")
         print(dfu_object_info)
         return {
@@ -129,9 +129,8 @@ class poolcountfileuploadUtil:
     def check_poolcount_file(poolcount_fp):
         """
         We check the pool file by initializing into dict format
-    
-        The function "init_pool_dict" runs the tests to see if the file is
-        correct.
+   
+        Currently a weak test- should add more testing capabilities.
         """
         # Expected fields
         exp_f = "barcode rcbarcode scaffold strand pos".split(" ") 

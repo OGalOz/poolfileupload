@@ -53,7 +53,7 @@ class poolfileuploadUtil:
         # This is the path to the pool file
         poolfile_fp = os.path.join(self.staging_folder, staging_pool_fp_name)
         # We check correctness of pool file
-        column_header_list = self.check_pool_file(poolfile_fp)
+        column_header_list, num_lines = self.check_pool_file(poolfile_fp)
         if len(column_header_list) != 12:
             print(
                 "WARNING: Number of columns is not 12 as expected: {}".format(
@@ -87,6 +87,7 @@ class poolfileuploadUtil:
             "shock_node_id": res_handle["id"],
             "compression_type": "gzip",
             "column_header_list": column_header_list,
+            "num_lines": num_lines,
             "fastqs_used": fastq_refs,
             "file_name": res_handle["file_name"],
             "utc_created": str(date_time),
@@ -142,30 +143,36 @@ class poolfileuploadUtil:
         # Parse pool file and check for errors
         test_vars_dict = {"poolfile": poolfile_fp, "report_dict": {"warnings": []}}
         try:
-            col_header_list = self.init_pool_dict(test_vars_dict)
+            col_header_list, num_lines = self.init_pool_dict(test_vars_dict)
         except Exception:
             logging.warning(
                 "Pool file seems to have errors - " + "Please check and reupload."
             )
             raise Exception
-        return col_header_list
+        return [col_header_list, num_lines]
 
     def init_pool_dict(self, vars_dict):
 
         # pool dict is rcbarcode to [barcode, scaffold, strand, pos]
         pool = {}
+        num_lines = 0
         with open(vars_dict["poolfile"], "r") as f:
-            poolfile_str = f.read()
-            poolfile_lines = poolfile_str.split("\n")
-            column_header_list = [x.strip() for x in poolfile_lines[0].split("\t")]
-            for pool_line in poolfile_lines:
-                pool_line.rstrip()
+            header_str = f.readline()
+            if header_str == '':
+                raise Exception("Issue with pool file - first line empty")
+            num_lines += 1
+            column_header_list = [x.strip() for x in header_str.split("\t")]
+            crnt_line = f.readline() 
+            while crnt_line != '':
+                num_lines += 1
+                crnt_line.rstrip()
                 pool = self.check_pool_line_and_add_to_pool_dict(
-                    pool_line, pool, vars_dict
+                    crnt_line, pool, vars_dict
                 )
+                crnt_line = f.readline()
         if len(pool.keys()) == 0:
             raise Exception("No entries in pool file")
-        return column_header_list
+        return [column_header_list, num_lines]
 
     def check_pool_line_and_add_to_pool_dict(self, pool_line, pool, vars_dict):
         """
@@ -201,6 +208,7 @@ class poolfileuploadUtil:
             vars_dict["report_dict"]["warnings"].append(warning_text)
             logging.warning(warning_text)
             barcode = "barcode"
+
         if barcode == "barcode":
             # Header line
             pass
