@@ -78,7 +78,7 @@ class poolcountfileuploadUtil:
         date_time = datetime.datetime.utcnow()
         #new_desc = "Uploaded by {} on (UTC) {} using Uploader. User Desc: ".format(
         #        self.params['username'], str(date_time))
-        fastq_refs = ["Manual Upload"]
+        fastq_refs = []
 
         # We create the data for the object
         pool_data = {
@@ -100,7 +100,7 @@ class poolcountfileuploadUtil:
                 self.params["genome_ref"],
                 self.params['ws_obj']
             ),
-            "description": self.params["poolcount_description"],
+            "description": "Manual Upload" + self.params["poolcount_description"],
         }
     
         # To get workspace id:

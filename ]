@@ -95,7 +95,7 @@ class poolfileuploadUtil:
             "related_organism_scientific_name": self.get_genome_organism_name(
                 self.params["genome_ref"]
             ),
-            "description": "Manual Upload: " + self.params["description"],
+            "description": "Manual Upload: "self.params["description"],
         }
 
         # To get workspace id:
