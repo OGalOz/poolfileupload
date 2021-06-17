@@ -71,7 +71,7 @@ class expsfileuploadUtil:
         new_exps_fp = os.path.join(self.shared_folder, expsfile_name)
 
         # If TSV we change nothing, otherwise we convert it to TSV
-        if params["sep_type"] == "TSV":
+        if self.params["sep_type"] == "TSV":
             shutil.copyfile(expsfile_fp, new_exps_fp)
         else:
             # Converting CSV to TSV

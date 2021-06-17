@@ -65,7 +65,7 @@ class poolcountfileuploadUtil:
         # We copy the file from staging to scratch
         new_pc_fp = os.path.join(self.shared_folder, poolcount_name)
 
-        if params["sep_type"] == "TSV":
+        if self.params["sep_type"] == "TSV":
             shutil.copyfile(poolcount_fp, new_pc_fp)
         else:
             pc_df.to_csv(new_pc_fp, sep="\t", index=False)

@@ -67,7 +67,7 @@ class poolfileuploadUtil:
         # We copy the file from staging to scratch
         new_pool_fp = os.path.join(self.shared_folder, poolfile_name)
 
-        if params["sep_type"] == "TSV":
+        if self.params["sep_type"] == "TSV":
             shutil.copyfile(poolfile_fp, new_pool_fp)
         else:
             pool_df.to_csv(new_pool_fp, sep="\t", index=False)
