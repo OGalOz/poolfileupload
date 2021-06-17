@@ -64,7 +64,7 @@ class expsfileuploadUtil:
         # We check correctness of exps file. Returns list and int
         column_header_list, num_rows, exps_df = self.check_exps_file(
                                                             expsfile_fp,
-                                                            params['sep_type'])
+                                                            self.params['sep_type'])
 
 
         # We copy the file from staging to scratch

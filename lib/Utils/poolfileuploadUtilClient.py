@@ -56,7 +56,8 @@ class poolfileuploadUtil:
 
         # CHECK POOL FILE:
         column_header_list, num_lines, pool_df = self.check_pool_file(poolfile_fp,
-                                                             params["sep_type"])
+                                                             self.params["sep_type"])
+
         if len(column_header_list) != 12:
             print(
                 "WARNING: Number of columns is not 12 as expected: {}".format(

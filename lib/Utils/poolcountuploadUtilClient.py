@@ -60,7 +60,7 @@ class poolcountfileuploadUtil:
         poolcount_fp = os.path.join(self.staging_folder, staging_fp_name)
         # We check correctness of pool file in staging
         column_header_list, num_lines, pc_df = self.check_poolcount_file(poolcount_fp, 
-                                                                  params["sep_type"])
+                                                                  self.params["sep_type"])
 
         # We copy the file from staging to scratch
         new_pc_fp = os.path.join(self.shared_folder, poolcount_name)
