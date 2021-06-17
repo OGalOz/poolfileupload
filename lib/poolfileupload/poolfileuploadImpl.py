@@ -90,9 +90,13 @@ class poolfileupload:
             else:
                 raise Exception("Did not recognize pool_file_type for upload")
 
+
+
         text_message = "Finished uploading file \n"
         text_message += "{} saved as {} on {}\n".format(result['Name'],
                         result['Type'], result['Date'])
+
+        logging.info(text_message)
 
         report = KBaseReport(self.callback_url)
         report_info = report.create({'report': {'objects_created':[],

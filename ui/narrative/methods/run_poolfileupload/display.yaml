@@ -1,12 +1,12 @@
 #
 # define display information
 #
-name: Import Pool File (TSV) from Staging Area
+name: Import RBTnSeq File (TSV) from Staging Area
 subtitle: |
-    Import a pool file (in TSV format) from your staging area into your Narrative
+    Import an RBTnSeq table (in TSV format) from your staging area into your Narrative
 
 tooltip: |
-    Import a pool file (in TSV format) from your staging area into your Narrative
+    Import one of the types of RBTnSeq files (in TSV format) from your staging area into your Narrative.
 
 screenshots: []
 

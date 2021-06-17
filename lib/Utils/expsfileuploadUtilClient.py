@@ -70,9 +70,11 @@ class expsfileuploadUtil:
         # We copy the file from staging to scratch
         new_exps_fp = os.path.join(self.shared_folder, expsfile_name)
 
+        # If TSV we change nothing, otherwise we convert it to TSV
         if params["sep_type"] == "TSV":
             shutil.copyfile(expsfile_fp, new_exps_fp)
         else:
+            # Converting CSV to TSV
             exps_df.to_csv(new_exps_fp, sep="\t", index=False)
 
         expsfile_fp = new_exps_fp
@@ -122,10 +124,11 @@ class expsfileuploadUtil:
                 }
             ],
         }
+
+        logging.info("Using DFU to save the object info:")
         # save_objects returns a list of object_infos
         dfu_object_info = self.dfu.save_objects(save_object_params)[0]
-        print("dfu_object_info: ")
-        print(dfu_object_info)
+
         return {
             "Name": dfu_object_info[1],
             "Type": dfu_object_info[2],
@@ -189,30 +192,10 @@ class expsfileuploadUtil:
                                 " 'control_bool' column must also be included."
                                 " File headers are currently: " + ", ".join(exps_df.columns))
 
-        return [exps_df.shape[1], exps_df.shape[0]]
+        logging.info("For experiments file, num rows is: "
+                    f" {exps_df.shape[0]}, num columns is {exps_df.shape[1]}")
 
-
-
-
-        cols, num_rows = self.read_table(expsfile_fp, required)
-
-        return [cols, num_rows, exps_df]
-
-    def read_table(self, fp, required):
-        """
-        Following function takes a filename and a list of required fields i
-        (file is TSV)
-        returns list of headers
-        Does not return header line
-
-        Required values in the exps case:
-            "SetName",
-            "Index",
-            "Description",
-            "Date_pool_expt_started",
-            "Group"
-        """
-
+        return [exps_df.shape[1], exps_df.shape[0], exps_df]
 
 
     def get_genome_organism_name(self, genome_ref):
