@@ -38,13 +38,13 @@ https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4436071/
 
 
 
-
+---
 * Experiments Files:
 Experiments files are tables that give information regarding the experiments. Each row
 provides information about one experiment. So, for example, if you have 108 different
 conditions tested (including the controls), then your Experiments table would have
 108 rows not including the header row (with the column names). Column names
-that are not optional:
+that are not optional:  "SetName", "Index", "Description", "Date_pool_expt_started", "Group"
 
 * SetName -- experiments that were sequenced together should have the same set name, usually ending with set1, set2, etc. Note that the set and the index together should be unique for each experiment.
 
@@ -72,7 +72,7 @@ There is an option to define whether an experiment is a "Time0" experiment (Cont
     where the values would be "True" if it is a control, and "False" otherwise. 
     And then you would also need to create a column called "control_group"
     where the experiments which
-    
+---
     
 
 
