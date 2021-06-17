@@ -2,6 +2,7 @@ import os
 import logging
 import shutil
 import datetime
+import pandas as pd
 from installed_clients.DataFileUtilClient import DataFileUtil
 from installed_clients.WorkspaceClient import Workspace
 
@@ -58,11 +59,16 @@ class poolcountfileuploadUtil:
         # This is the path to the pool file in staging
         poolcount_fp = os.path.join(self.staging_folder, staging_fp_name)
         # We check correctness of pool file in staging
-        column_header_list, num_lines = self.check_poolcount_file(poolcount_fp)
+        column_header_list, num_lines, pc_df = self.check_poolcount_file(poolcount_fp, 
+                                                                  params["sep_type"])
 
         # We copy the file from staging to scratch
         new_pc_fp = os.path.join(self.shared_folder, poolcount_name)
-        shutil.copyfile(poolcount_fp, new_pc_fp)
+
+        if params["sep_type"] == "TSV":
+            shutil.copyfile(poolcount_fp, new_pc_fp)
+        else:
+            pc_df.to_csv(new_pc_fp, sep="\t", index=False)
         #poolcount_scratch_fp is location of pool file in scratch
         poolcount_scratch_fp = new_pc_fp
 
@@ -125,7 +131,7 @@ class poolcountfileuploadUtil:
         }
     
 
-    def check_poolcount_file(self, poolcount_fp):
+    def check_poolcount_file(self, poolcount_fp, sep):
         """
         We check the pool file by initializing into dict format
    
@@ -133,30 +139,28 @@ class poolcountfileuploadUtil:
         """
         # Expected fields
         exp_f = "barcode rcbarcode scaffold strand pos".split(" ") 
-    
-        with open(poolcount_fp, "r") as f:
-            f_str = f.read()
-        f_list = f_str.split('\n')
-        num_lines = len(f_list)
-        header_line = f_list[0]
 
-        # Dropping f_str from memory
-        f_str = None
+        sep = "\t" if sep == "TSV" else ","
+
+        poolcount_df = pd.read_table(poolcount_fp, sep=sep)
+
+        for field in exp_f:
+            if field not in poolcount_df.columns:
+                raise Exception(f"Expected field {field} in poolcount but didn't get it."
+                                " Current fields: " + ", ".join(poolcount_df.columns))
+        
+        for ix, val in poolcount_df["strand"].iteritems():
+            if val not in ["+", "-"]:
+                raise Exception("The strand column of poolcount must be one of '+' or '-',"
+                                f" current value at row number {ix + 1} is {val}.")
+
+        for ix, val in poolcount_df["pos"].iteritems():
+            if not val.isdigit():
+                raise Exception("The 'pos' column of poolcount must be an integer,"
+                                f" current value at row number {ix + 1} is {val}.")
+
     
-    
-        if header_line == '':
-            raise Exception("File format incorrect: " + poolcount_fp)
-    
-        fields = header_line.split("\t")
-    
-        if not (len(fields) >= 6):
-            raise Exception("Too few fields in " + poolcount_fp)
-        for i in range(len(exp_f)):
-            if not fields[i] == exp_f[i]:
-                raise Exception(
-                            "Expected {} but field is {}".format(exp_f[i], fields[i])
-                        )
-        return [fields, num_lines]
+        return [list(poolcount_df.columns), poolcount_df.shape[0], poolcount_df]
 
     def validate_import_file_from_staging_params(self):
         # check for required parameters

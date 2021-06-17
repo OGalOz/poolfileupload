@@ -68,6 +68,7 @@ class poolfileuploadTest(unittest.TestCase):
         genome_ref = ""
         description = "Testing module"
         output_name = "initial_testing_output"
+        sep_type = "TSV" # or "CSV"
         
         #pool_file_type is one of 
         # poolfile, poolcount, experiment
@@ -79,5 +80,6 @@ class poolfileuploadTest(unittest.TestCase):
                 'genome_ref': genome_ref,
                 'description': description,
                 'pool_file_type': pool_file_type,
+                'sep_type': sep_type,
                 'output_name': output_name
                 })

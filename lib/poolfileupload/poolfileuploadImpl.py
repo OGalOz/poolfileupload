@@ -60,10 +60,18 @@ class poolfileupload:
         token = os.environ.get('KB_AUTH_TOKEN', None)
         ws = Workspace(self.ws_url, token=token)
 
+
         params['workspace_id'] =  ws.get_workspace_info({'workspace': params['workspace_name']})[0]
         params['ws_obj'] = ws
         params['username'] = ctx['user_id']
         params['output_name'] = check_output_name(params['output_name'])
+
+        # Checking basic params
+        if not 'sep_type' in params:
+            raise Exception("sep_type not in params.")
+        elif params['sep_type'] not in ["TSV", "CSV"]:
+            raise Exception(f"Did not recognize sep_type: {params['sep_type']}")
+
 
 
         if 'pool_file_type' not in params:
@@ -112,3 +120,4 @@ class poolfileupload:
                      'git_commit_hash': self.GIT_COMMIT_HASH}
         #END_STATUS
         return [returnVal]
+

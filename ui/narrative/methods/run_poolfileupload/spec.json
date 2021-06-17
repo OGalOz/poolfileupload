@@ -34,7 +34,6 @@
             }
         },
         {
-            
             "id": "pool_file_type",
             "optional": false,
             "advanced": false,
@@ -70,7 +69,26 @@
                 "n_rows": 3
             }
         },
-
+        {
+            "id": "sep_type",
+            "optional": false,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [ "TSV" ],
+            "field_type": "dropdown",
+            "dropdown_options": {
+                "options": [
+                {
+                    "value": "TSV",
+                    "display": "TSV"
+                },
+                {
+                    "value": "CSV",
+                    "display": "CSV"
+                }
+                ]
+            }
+        },
         {
             "id": "run_method",
             "optional": false,
@@ -126,6 +144,11 @@
                     "input_parameter": "description",
                     "target_property": "description"
                 },              
+                {
+                    "input_parameter": "sep_type",
+                    "target_property": "sep_type"
+                },
+
                 {
                     "input_parameter": "run_method",
                     "target_property": "run_method"

@@ -56,6 +56,14 @@ parameters :
             An unconstrained description of the pool file and project.
         long-hint : |
             Please give a light description of the pool file and project.
+    sep_type :
+        ui-name : |
+            Table Type 
+        short-hint : |
+            Is your file tab-separated or comma separated?
+        long-hint : |
+            Open the file with a text editor (such as TextEdit on Mac), are the values 
+            separated by large spaces (TSV) or commas (CSV)?
     run_method :
         ui-name : |
             Run Method

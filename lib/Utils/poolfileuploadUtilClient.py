@@ -3,6 +3,7 @@ import logging
 import re
 import shutil
 import datetime
+import pandas as pd
 from installed_clients.DataFileUtilClient import DataFileUtil
 from installed_clients.WorkspaceClient import Workspace
 
@@ -52,8 +53,10 @@ class poolfileuploadUtil:
             print("Succesfully recognized staging directory")
         # This is the path to the pool file
         poolfile_fp = os.path.join(self.staging_folder, staging_pool_fp_name)
-        # We check correctness of pool file
-        column_header_list, num_lines = self.check_pool_file(poolfile_fp)
+
+        # CHECK POOL FILE:
+        column_header_list, num_lines, pool_df = self.check_pool_file(poolfile_fp,
+                                                             params["sep_type"])
         if len(column_header_list) != 12:
             print(
                 "WARNING: Number of columns is not 12 as expected: {}".format(
@@ -62,7 +65,12 @@ class poolfileuploadUtil:
             )
         # We copy the file from staging to scratch
         new_pool_fp = os.path.join(self.shared_folder, poolfile_name)
-        shutil.copyfile(poolfile_fp, new_pool_fp)
+
+        if params["sep_type"] == "TSV":
+            shutil.copyfile(poolfile_fp, new_pool_fp)
+        else:
+            pool_df.to_csv(new_pool_fp, sep="\t", index=False)
+
         poolfile_fp = new_pool_fp
         # We create the handle for the object:
         file_to_shock_result = self.dfu.file_to_shock(
@@ -132,100 +140,64 @@ class poolfileuploadUtil:
             if p not in self.params:
                 raise ValueError('"{}" parameter is required, but missing'.format(p))
 
-    def check_pool_file(self, poolfile_fp):
+    def check_pool_file(self, poolfile_fp, separator):
         """
         We check the pool file by initializing into dict format
 
         The function "init_pool_dict" runs the tests to see if the file is
         correct.
         """
-        col_header_list = []
-        # Parse pool file and check for errors
-        test_vars_dict = {"poolfile": poolfile_fp, "report_dict": {"warnings": []}}
-        try:
-            col_header_list, num_lines = self.init_pool_dict(test_vars_dict)
-        except Exception:
-            logging.warning(
-                "Pool file seems to have errors - " + "Please check and reupload."
-            )
-            raise Exception
-        return [col_header_list, num_lines]
 
-    def init_pool_dict(self, vars_dict):
+        
+        sep = "\t" if separator == "TSV" else ","
 
-        # pool dict is rcbarcode to [barcode, scaffold, strand, pos]
-        pool = {}
-        num_lines = 0
-        with open(vars_dict["poolfile"], "r") as f:
-            header_str = f.readline()
-            if header_str == '':
-                raise Exception("Issue with pool file - first line empty")
-            num_lines += 1
-            column_header_list = [x.strip() for x in header_str.split("\t")]
-            crnt_line = f.readline() 
-            while crnt_line != '':
-                num_lines += 1
-                crnt_line.rstrip()
-                pool = self.check_pool_line_and_add_to_pool_dict(
-                    crnt_line, pool, vars_dict
-                )
-                crnt_line = f.readline()
-        if len(pool.keys()) == 0:
-            raise Exception("No entries in pool file")
-        return [column_header_list, num_lines]
+        req_cols = ["barcode", "rcbarcode", "scaffold", 
+                    "pos", "strand"] 
 
-    def check_pool_line_and_add_to_pool_dict(self, pool_line, pool, vars_dict):
-        """
-        For a pool line to be correct it has to follow a few rules.
+        dtypes = {
+                "barcode": str,
+                "rcbarcode": str,
+                "scaffold": str,
+                "nTot": int,
+                "n": int,
+                "strand": str,
+                "pos": int,
+                "n2": int,
+                "scaffold2": str,
+                "strand2": str,
+                "pos2": int,
+                "nPastEnd": int
+        }
 
-        We care about the first 7 columns of each pool line.
-        The first line in the file is the headers, and the first 7 are
-        barcode, rcbarcode, nTot, n, scaffold, strand, pos
-        Both the barcodes and rcbarcodes must be entirely made up of
-        characters from "ACTG". Position must be made up of any number
-        of digits (including 0). Strand is from "+","-","".
-        If the rcbarcode already exists in the pool, then there is a
-        problem with the pool file. Each rcbarcode must be unique.
-        """
-        # We get first 7 columns of pool_line (out of 12)
-        split_pool_line = pool_line.split("\t")[:7]
-        # We remove spaces:
-        for x in split_pool_line:
-            x.replace(" ", "")
-        if len(split_pool_line) >= 7:
-            # We unpack
-            (
-                barcode,
-                rcbarcode,
-                undef_1,
-                undef_2,
-                scaffold,
-                strand,
-                pos,
-            ) = split_pool_line
-        else:
-            warning_text = "pool file line with less than 7 tabs:\n{}".format(pool_line)
-            vars_dict["report_dict"]["warnings"].append(warning_text)
-            logging.warning(warning_text)
-            barcode = "barcode"
+        pool_df = pd.read_table(poolfile_fp, sep=sep)
 
-        if barcode == "barcode":
-            # Header line
-            pass
-        else:
-            if not re.search(r"^[ACGT]+$", barcode):
-                logging.debug(len(barcode))
-                raise Exception("Invalid barcode: |{}|".format(barcode))
-            if not re.search(r"^[ACGT]+$", rcbarcode):
-                raise Exception("Invalid rcbarcode: |{}|".format(rcbarcode))
-            if not (pos == "" or re.search(r"^\d+$", pos)):
-                raise Exception("Invalid position: |{}|".format(pos))
-            if not (strand == "+" or strand == "-" or strand == ""):
-                raise Exception("Invalid strand: |{}|".format(strand))
-            if rcbarcode in pool:
-                raise Exception("Duplicate rcbarcode.")
-            pool[rcbarcode] = [barcode, scaffold, strand, pos]
-        return pool
+        # Checking for duplicates
+        barcodes_dict = {}
+        for barcode in pool_df["barcode"]:
+            if barcode in barcodes_dict:
+                raise Exception(f"Duplicate barcode: {barcode}")
+            else:
+                barcodes_dict[barcode] = 1
+        for ix, strand in pool_df["strand"].iteritems():
+            if strand not in ["+", "-"]:
+                raise Exception(f"Incorrect strand value: {strand} at row {ix}")
+
+        for ix, pos in pool_df["pos"].iteritems():
+            if pos < 0:
+                raise Exception("Positions must be positive."
+                                f" Value at row {ix} is {pos}")
+
+        if "pos2" in pool_df.columns:
+            for ix, pos in pool_df["pos2"].iteritems():
+                if pos < 0:
+                    raise Exception("Positions must be positive."
+                                    f" Value at row {ix} is {pos}")
+
+
+        logging.info("Poolfile columns are: " + ", ".join(pool_df.columns))
+
+        return [list(pool_df.columns), pool_df.shape[0], pool_df]
+
 
     def get_genome_organism_name(self, genome_ref):
         # Getting the organism name using WorkspaceClient

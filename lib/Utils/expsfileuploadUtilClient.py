@@ -3,6 +3,7 @@ import logging
 import re
 import shutil
 import datetime
+import pandas as pd
 from installed_clients.DataFileUtilClient import DataFileUtil
 from installed_clients.WorkspaceClient import Workspace
 
@@ -61,12 +62,19 @@ class expsfileuploadUtil:
         expsfile_fp = os.path.join(self.staging_folder, staging_exps_fp_name)
 
         # We check correctness of exps file. Returns list and int
-        column_header_list, num_rows, setNames = self.check_exps_file(
-                                                                    expsfile_fp)
+        column_header_list, num_rows, exps_df = self.check_exps_file(
+                                                            expsfile_fp,
+                                                            params['sep_type'])
+
 
         # We copy the file from staging to scratch
         new_exps_fp = os.path.join(self.shared_folder, expsfile_name)
-        shutil.copyfile(expsfile_fp, new_exps_fp)
+
+        if params["sep_type"] == "TSV":
+            shutil.copyfile(expsfile_fp, new_exps_fp)
+        else:
+            exps_df.to_csv(new_exps_fp, sep="\t", index=False)
+
         expsfile_fp = new_exps_fp
 
         # We create the handle for the object:
@@ -137,18 +145,58 @@ class expsfileuploadUtil:
             if p not in self.params:
                 raise ValueError('"{}" parameter is required, but missing'.format(p))
 
-    def check_exps_file(self, expsfile_fp):
+    def check_exps_file(self, expsfile_fp, separator):
+        """
+        Args:
+            expsfile_fp (str): Path to experiments file
+            separator (str): "CSV" or "TSV", "CSV" implying comma, "TSV" tab
+        """
+        sep = "\t" if separator == "TSV" else ","
 
         required = [
             "SetName",
             "Index",
             "Description",
             "Date_pool_expt_started",
+            "Group"
         ]
 
-        cols, num_rows, setNames = self.read_table(expsfile_fp, required)
 
-        return [cols, num_rows, setNames]
+        exps_df = pd.read_table(expsfile_fp, sep=sep) 
+
+        for col_name in required:
+            if col_name not in exps_df.columns:
+                raise Exception(f"Required column name: {col_name} missing from file headers.",
+                                " File headers are: " + ", ".join(exps_df.columns))
+
+        # Set Name and Index must be unique: (+ in pandas means vector wise)
+        st_nm_ix = list(exps_df["SetName"] + exps_df["Index"])
+        unq_dict = {}
+        for val in st_nm_ix:
+            if val in unq_dict:
+                raise Exception("SetName and Index have to be unique per row."
+                                f" Repeated value: {val}")
+            else:
+                unq_dict[val] = 1
+
+        if "control_bool" in exps_df.columns:
+            if "control_group" not in exps_df.columns:
+                raise Exception("If 'control_bool' column is in Experiments file, then"
+                                " 'control_group' column must also be included."
+                                " File headers are currently: " + ", ".join(exps_df.columns))
+        elif "control_group" in exps_df.columns:
+                raise Exception("If 'control_group' column is in Experiments file, then"
+                                " 'control_bool' column must also be included."
+                                " File headers are currently: " + ", ".join(exps_df.columns))
+
+        return [exps_df.shape[1], exps_df.shape[0]]
+
+
+
+
+        cols, num_rows = self.read_table(expsfile_fp, required)
+
+        return [cols, num_rows, exps_df]
 
     def read_table(self, fp, required):
         """
@@ -156,52 +204,16 @@ class expsfileuploadUtil:
         (file is TSV)
         returns list of headers
         Does not return header line
-        """
-        with open(fp, "r") as f:
-            file_str = f.read()
-        file_list = file_str.split("\n")
-        header_line = file_list[0]
-        # Check for Mac Style Files
-        if re.search(r"\t", header_line) and re.search(r"\r", header_line):
-            raise Exception(
-                (
-                    "Tab-delimited input file {} is a Mac-style text file "
-                    "which is not supported.\n"
-                    "Use\ndos2unix -c mac {}\n to convert it to a Unix "
-                    "text file.\n"
-                ).format(fp, fp)
-            )
-        cols = header_line.split("\t")
-        cols_dict = {}
-        for i in range(len(cols)):
-            cols_dict[cols[i]] = i
-        for field in required:
-            if field not in cols_dict:
-                raise Exception(
-                    "No field {} in {}. Must include fields".format(field, fp)
-                    + "\n{}".format(" ".join(required))
-                )
-        rows = []
-        # This is unique to Experiments
-        setNames = []
-        for i in range(1, len(file_list)):
-            line = file_list[i]
-            # if last line empty
-            if len(line) == 0:
-                continue
-            line = re.sub(r"[\r\n]+$", "", line)
-            split_line = line.split("\t")
-            setNames.append(split_line[0])
-            if not len(split_line) == len(cols):
-                raise Exception(
-                    "Wrong number of columns in:\n{}\nin {} l:{}".format(line, fp, i)
-                )
-            new_dict = {}
-            for i in range(len(cols)):
-                new_dict[cols[i]] = split_line[i]
-            rows.append(new_dict)
 
-        return [cols, len(file_list), setNames]
+        Required values in the exps case:
+            "SetName",
+            "Index",
+            "Description",
+            "Date_pool_expt_started",
+            "Group"
+        """
+
+
 
     def get_genome_organism_name(self, genome_ref):
         # Getting the organism name using WorkspaceClient
