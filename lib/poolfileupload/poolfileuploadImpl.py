@@ -56,6 +56,11 @@ class poolfileupload:
         # return variables are: output
         #BEGIN run_poolfileupload
 
+        print(params)
+        raise Exception("Testing: stopping " + str(params))
+                        
+
+
         params['shared_folder'] = self.shared_folder
         token = os.environ.get('KB_AUTH_TOKEN', None)
         ws = Workspace(self.ws_url, token=token)
