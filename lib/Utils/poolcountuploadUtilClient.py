@@ -179,10 +179,10 @@ class poolcountfileuploadUtil:
         # check for required parameters
         for p in [
             "username",
-            "staging_file_name",
+            "staging_file_names",
             "genome_ref",
             "description",
-            "output_name",
+            "output_names",
             "ws_obj",
             "workspace_id"
         ]:

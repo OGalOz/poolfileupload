@@ -4,6 +4,8 @@ This uploader assists in uploading Various RBTnSeq Files.
 * The Experiments files are TSVs with an undefined number of columns.
 * The few required columns are: SetName, Index, Description, Date_pool_expt_started.
 * For a full explanation of Experiments fcile refer to the end of the README.
+* Only upload multiple files at once if you're uploading PoolCount files.
+* Create a single Output Name for each file you're uploading.
 
 ---
 * Pool Files are TSV files with 12 columns. 

@@ -153,10 +153,10 @@ class expsfileuploadUtil:
         # check for required parameters
         for p in [
             "username",
-            "staging_file_name",
+            "staging_file_names",
             "genome_ref",
             "description",
-            "output_name"
+            "output_names"
         ]:
             if p not in self.params:
                 raise ValueError('"{}" parameter is required, but missing'.format(p))
