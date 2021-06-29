@@ -29,7 +29,7 @@ parameters :
         ui-name : |
             Imported TSV File Path
         short-hint : |
-            Select a pool file in TSV format. Filename should end with ".tsv", ".n10" or ".pool"
+            Select a pool file in TSV format. Filename should end with ".tsv", ".n10" or ".pool". Multiple only for poolcount upload.
         long-hint  : |
             Pool file should have 4 tab-separated fields -- 
             barcode, rcbarcode, nTot, n, scaffold, strand, pos, n2, scaffold2, strand2, pos2, nPastEnd
@@ -74,9 +74,9 @@ parameters :
             choose one of the existing options. Currently the only option is Pool Count.
     output_names :
         ui-name : |
-            Output File Name
+            Output File Names
         short-hint : |
-            Name your file. Avoid special characters
+            Name your file. Avoid special characters. Multiple only for PoolCount upload.
         long-hint  : |
             This is the name of your pool file that will appear in the data column.
 
