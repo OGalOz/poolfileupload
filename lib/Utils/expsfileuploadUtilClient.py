@@ -35,20 +35,33 @@ class expsfileuploadUtil:
             the necessary information- including related genome.
         params should include:
             username,
-            staging_file_name,
+            staging_file_names,
             genome_ref,
             description,
-            output_name
+            output_names
         """
 
         print("params: ", self.params)
         self.validate_import_expsfile_from_staging_params()
 
-        # Name of file in staging: (file name or absolute path?)
-        staging_exps_fp_name = self.params["staging_file_name"]
 
-        # Output name of exps file:
-        expsfile_name = self.params["output_name"]
+        # Name of file in staging:
+        stg_fs = self.params["staging_file_names"]
+        if len(stg_fs) != 1:
+            raise Exception("Expecting a single experiments file, got a different number"
+                            f" of staging files: {len(stg_fs)}. Files: " + \
+                            ", ".join(sgf_fs))
+        else:
+            staging_exps_fp_name = stg_fs[0]
+
+        op_nms = self.params["output_names"]
+        if len(op_nms) != 1:
+            raise Exception("Expecting a single output name, got a different number"
+                            f": {len(op_nms)}. Output Names: " + \
+                            ", ".join(op_nms))
+        else:
+            expsfile_name = op_nms[0]
+
 
         print("expsfile_name: ", expsfile_name)
         print("top dir /:", os.listdir("/"))

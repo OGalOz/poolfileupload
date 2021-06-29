@@ -49,17 +49,21 @@ class poolfileupload:
         """
         This example function accepts any number of parameters and returns results in a KBaseReport
         :param params: instance of mapping from String to unspecified object
+            'workspace_name' (str):, 
+            'workspace_id' (int): e.g. 62550, 
+            'genome_ref' (str): '62550/2/1', 
+            'pool_file_type' (str): 'poolfile' or 'poolcount' or 'experiments', 
+            'description' (str): Free string 
+            'sep_type': 'TSV' or 'CSV'
+            'run_method': 'poolcount', u
+            'staging_file_names' (list<str>): list<filenames> 
+            'output_names' list<str>: List<Free string> - Correlate to staging_file_names
         :returns: instance of type "ReportResults" -> structure: parameter
            "report_name" of String, parameter "report_ref" of String
         """
         # ctx is the context object
         # return variables are: output
         #BEGIN run_poolfileupload
-
-        print(params)
-        raise Exception("Testing: stopping " + str(params))
-                        
-
 
         params['shared_folder'] = self.shared_folder
         token = os.environ.get('KB_AUTH_TOKEN', None)
@@ -69,7 +73,7 @@ class poolfileupload:
         params['workspace_id'] =  ws.get_workspace_info({'workspace': params['workspace_name']})[0]
         params['ws_obj'] = ws
         params['username'] = ctx['user_id']
-        params['output_name'] = check_output_name(params['output_name'])
+        #params['output_name'] = check_output_name(params['output_name'])
 
         # Checking basic params
         if not 'sep_type' in params:
@@ -98,8 +102,13 @@ class poolfileupload:
 
 
         text_message = "Finished uploading file \n"
-        text_message += "{} saved as {} on {}\n".format(result['Name'],
+        if pft != "poolcount":
+            text_message += "{} saved as {} on {}\n".format(result['Name'],
                         result['Type'], result['Date'])
+        else:
+            for pc_result in result:
+                text_message += "{} saved as {} on {}\n".format(pc_result['Name'],
+                        pc_result['Type'], pc_result['Date'])
 
         logging.info(text_message)
 

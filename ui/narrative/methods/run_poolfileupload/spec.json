@@ -11,7 +11,7 @@
     },
     "parameters": [
         {
-            "id": "staging_file_name",
+            "id": "staging_file_names",
             "optional": false,
             "advanced": false,
             "allow_multiple": true,
@@ -106,10 +106,10 @@
             }
         },
         {
-            "id": "output_name",
+            "id": "output_names",
             "optional": false,
             "advanced": false,
-            "allow_multiple": false,
+            "allow_multiple": true,
             "default_values": [ "" ],
             "field_type": "text",
             "text_options": {
@@ -154,12 +154,12 @@
                     "target_property": "run_method"
                 },
                 {
-                    "input_parameter": "staging_file_name",
-                    "target_property": "staging_file_name"
+                    "input_parameter": "staging_file_names",
+                    "target_property": "staging_file_names"
                 },
                 {
-                    "input_parameter": "output_name",
-                    "target_property": "output_name"
+                    "input_parameter": "output_names",
+                    "target_property": "output_names"
                 }
             ],
             "output_mapping": [

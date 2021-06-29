@@ -25,7 +25,7 @@ suggestions:
 # Configure the display and description of parameters
 #
 parameters :
-    staging_file_name :
+    staging_file_names :
         ui-name : |
             Imported TSV File Path
         short-hint : |
@@ -72,7 +72,7 @@ parameters :
         long-hint : |
             Choose the proper use case for the pool file. If your use case doesn't exist,
             choose one of the existing options. Currently the only option is Pool Count.
-    output_name :
+    output_names :
         ui-name : |
             Output File Name
         short-hint : |

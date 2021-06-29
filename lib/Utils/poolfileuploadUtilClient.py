@@ -33,16 +33,33 @@ class poolfileuploadUtil:
         We send the file to shock using dfu.
         We get the handle and save the object with all
             the necessary information- including related genome.
+        params should include:
+            output_names,
+            staging_file_names,
+            ws_obj,
+            workspace_id,
 
         """
         print("params: ", self.params)
         self.validate_import_poolfile_from_staging_params()
 
         # Name of file in staging:
-        staging_pool_fp_name = self.params["staging_file_name"]
+        stg_fs = self.params["staging_file_names"]
+        if len(stg_fs) != 1:
+            raise Exception("Expecting a single pool file, got a different number"
+                            f" of staging files: {len(stg_fs)}. Files: " + \
+                            ", ".join(sgf_fs))
+        else:
+            staging_pool_fp_name = stg_fs[0]
 
-        # Output name of pool file:
-        poolfile_name = self.params["output_name"]
+        op_nms = self.params["output_names"]
+        if len(op_nms) != 1:
+            raise Exception("Expecting a single output name, got a different number"
+                            f": {len(op_nms)}. Output Names: " + \
+                            ", ".join(op_nms))
+        else:
+            poolfile_name = op_nms[0]
+
 
         print("poolfile_name: ", poolfile_name)
         print("top dir /:", os.listdir("/"))
