@@ -168,7 +168,7 @@ class poolcountfileuploadUtil:
                                 f" current value at row number {ix + 1} is {val}.")
 
         for ix, val in poolcount_df["pos"].iteritems():
-            if not val.isdigit():
+            if not isinstance(val, int):
                 raise Exception("The 'pos' column of poolcount must be an integer,"
                                 f" current value at row number {ix + 1} is {val}.")
 
