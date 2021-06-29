@@ -109,7 +109,7 @@ class poolcountfileuploadUtil:
                 "fastqs_used": fastq_refs,
                 "file_name": res_handle["file_name"],
                 "utc_created": str(date_time),
-                "set_name": self.params['output_name'], 
+                "set_name": crnt_pc_op_name, 
                 "num_lines": str(num_lines),
                 "related_genome_ref": self.params["genome_ref"],
                 "related_organism_scientific_name": self.get_genome_organism_name(
