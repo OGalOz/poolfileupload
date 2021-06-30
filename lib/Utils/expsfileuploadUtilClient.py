@@ -130,7 +130,7 @@ class expsfileuploadUtil:
 
         #DEBUGGING:
         logging.info("Printing types for data dict: ")
-        for k, val in exps_data.iteritems():
+        for k, val in exps_data.items():
             logging.info(f"{k}: {type(val)}")
 
         # To get workspace id:
