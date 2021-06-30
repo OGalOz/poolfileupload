@@ -128,10 +128,12 @@ class expsfileuploadUtil:
             "description": self.params["description"],
         }
 
+        '''
         #DEBUGGING:
         logging.info("Printing types for data dict: ")
         for k, val in exps_data.items():
             logging.info(f"{k}: {type(val)}")
+        '''
 
         # To get workspace id:
         ws_id = self.params["workspace_id"]
