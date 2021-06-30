@@ -79,6 +79,9 @@ class expsfileuploadUtil:
                                                             expsfile_fp,
                                                             self.params['sep_type'])
 
+        # Making sure every column name is a string (not int)
+        column_header_list = [str(x) for x in column_header_list]
+
 
         # We copy the file from staging to scratch
         new_exps_fp = os.path.join(self.shared_folder, expsfile_name)
@@ -124,6 +127,11 @@ class expsfileuploadUtil:
             ),
             "description": self.params["description"],
         }
+
+        #DEBUGGING:
+        logging.info("Printing types for data dict: ")
+        for k, val in exps_data.iteritems():
+            logging.info(f"{k}: {type(val)}")
 
         # To get workspace id:
         ws_id = self.params["workspace_id"]
