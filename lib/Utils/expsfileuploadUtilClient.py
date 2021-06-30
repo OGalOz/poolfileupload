@@ -216,7 +216,7 @@ class expsfileuploadUtil:
         logging.info("For experiments file, num rows is: "
                     f" {exps_df.shape[0]}, num columns is {exps_df.shape[1]}")
 
-        return [exps_df.shape[1], exps_df.shape[0], exps_df]
+        return [list(exps_df.columns), exps_df.shape[0], exps_df]
 
 
     def get_genome_organism_name(self, genome_ref):
