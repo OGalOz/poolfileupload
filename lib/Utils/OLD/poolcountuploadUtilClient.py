@@ -98,7 +98,7 @@ class poolcountfileuploadUtil:
 
             # We create the data for the object
             poolcount_data = {
-                "file_type": "KBaseRBTnSeq.PoolCount",
+                "file_type": "KBasePoolTSV.PoolCount",
                 "poolcount": res_handle["hid"],
                 # below should be shock
                 "handle_type": res_handle["type"],
@@ -106,16 +106,14 @@ class poolcountfileuploadUtil:
                 "shock_node_id": res_handle["id"],
                 "compression_type": "gzip",
                 "column_header_list": column_header_list,
-                "column_headers_str": ", ".join(column_header_list),
                 "fastqs_used": fastq_refs,
-                "fastqs_used_str": "NA",
                 "file_name": res_handle["file_name"],
                 "utc_created": str(date_time),
                 "set_name": crnt_pc_op_name, 
                 "num_lines": str(num_lines),
-                "related_genes_table_ref": self.params["genes_table_ref"],
+                "related_genome_ref": self.params["genome_ref"],
                 "related_organism_scientific_name": self.get_genome_organism_name(
-                    self.params["genes_table_ref"]
+                    self.params["genome_ref"]
                 ),
                 "description": "Manual Upload: " + self.params["description"],
             }
@@ -126,7 +124,7 @@ class poolcountfileuploadUtil:
                 "id": ws_id,
                 "objects": [
                     {
-                        "type": "KBaseRBTnSeq.PoolCount",
+                        "type": "KBasePoolTSV.PoolCount",
                         "data": poolcount_data,
                         "name": crnt_pc_op_name,
                     }
@@ -182,7 +180,7 @@ class poolcountfileuploadUtil:
         for p in [
             "username",
             "staging_file_names",
-            "genes_table_ref",
+            "genome_ref",
             "description",
             "output_names",
             "ws_obj",
@@ -192,7 +190,6 @@ class poolcountfileuploadUtil:
                 raise ValueError('"{}" parameter is required, but missing'.format(p))
 
     def get_genome_organism_name(self, genome_ref):
-        raise Exception("This part has not been written yet.")
         # Getting the organism name using WorkspaceClient
         ws = self.params['ws_obj'] 
         res = ws.get_objects2(

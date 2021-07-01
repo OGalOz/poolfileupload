@@ -33,22 +33,29 @@ parameters :
         long-hint  : |
             Pool file should have 4 tab-separated fields -- 
             barcode, rcbarcode, nTot, n, scaffold, strand, pos, n2, scaffold2, strand2, pos2, nPastEnd
-    genome_ref :
+    genes_table_ref :
         ui-name : |
-            Related Genome Object
+            Related Gene Table
         short-hint : |
-            The Genome to which this pool file corresponds
+            The Gene Table to which this pool file corresponds
         long-hint : |
-            The Genome to which the pool file corresponds.
+            The Gene Table to which the pool file corresponds.
+    organism_scientific_name :
+        ui-name : |
+            Organism Name
+        short-hint : |
+            If uploading a Genes Table, give the Organism's Scientific Name
+        long-hint : |
+            If uploading a Genes Table, give the Organism's Scientific Name.
     pool_file_type :
         ui-name : |
             File Type
         short-hint : |
             Which type of TSV file are you uploading?
         long-hint : |
-            There are three primary types of TSV files transferred between 
+            There are four primary types of TSV files transferred between 
             programs in RBTnSeq. You are allowed to upload them as long as they
-            follow a certain format. Poolfile, PoolCount, Experiments.
+            follow a certain format. InputGenesTable, Experiments, Poolfile, PoolCount.
     description :
         ui-name : |
             Description
@@ -64,14 +71,6 @@ parameters :
         long-hint : |
             Open the file with a text editor (such as TextEdit on Mac), are the values 
             separated by large spaces (TSV) or commas (CSV)?
-    run_method :
-        ui-name : |
-            Run Method
-        short-hint : |
-            For now this is always Pool Count
-        long-hint : |
-            Choose the proper use case for the pool file. If your use case doesn't exist,
-            choose one of the existing options. Currently the only option is Pool Count.
     output_names :
         ui-name : |
             Output File Names

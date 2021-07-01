@@ -6,6 +6,12 @@ This uploader assists in uploading Various RBTnSeq Files.
 * For a full explanation of Experiments fcile refer to the end of the README.
 * Only upload multiple files at once if you're uploading PoolCount files.
 * Create a single Output Name for each file you're uploading.
+* If you're uploading any of 'ExperimentsTable', 'PoolCount' or 'PoolFile', then 
+    you must indicate the GenesTable you are using. Otherwise, if you're uploading
+    'InputGenesTable' - you do not use a reference GenesTable, since that is
+    what you are creating.
+
+
 
 ---
 * Pool Files are TSV files with 12 columns. 

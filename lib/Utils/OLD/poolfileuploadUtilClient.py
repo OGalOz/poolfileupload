@@ -105,7 +105,7 @@ class poolfileuploadUtil:
 
         # We create the data for the object
         pool_data = {
-            "file_type": "KBaseRBTnSeq.PoolFile",
+            "file_type": "KBasePoolTSV.PoolFile",
             "poolfile": res_handle["hid"],
             # below should be shock
             "handle_type": res_handle["type"],
@@ -113,15 +113,13 @@ class poolfileuploadUtil:
             "shock_node_id": res_handle["id"],
             "compression_type": "gzip",
             "column_header_list": column_header_list,
-            "column_headers_str": ", ".join(column_header_list),
             "num_lines": str(num_lines),
             "fastqs_used": fastq_refs,
-            "fastqs_used_str": "NA",
             "file_name": res_handle["file_name"],
             "utc_created": str(date_time),
-            "related_genes_table_ref": self.params["genes_table_ref"],
+            "related_genome_ref": self.params["genome_ref"],
             "related_organism_scientific_name": self.get_genome_organism_name(
-                self.params["genes_table_ref"]
+                self.params["genome_ref"]
             ),
             "description": "Manual Upload: " + self.params["description"],
         }
@@ -132,7 +130,7 @@ class poolfileuploadUtil:
             "id": ws_id,
             "objects": [
                 {
-                    "type": "KBaseRBTnSeq.PoolFile",
+                    "type": "KBasePoolTSV.PoolFile",
                     "data": pool_data,
                     "name": poolfile_name,
                 }
@@ -153,7 +151,7 @@ class poolfileuploadUtil:
         for p in [
             "username",
             "staging_file_names",
-            "genes_table_ref",
+            "genome_ref",
             "description",
             "output_names"
         ]:
@@ -164,11 +162,15 @@ class poolfileuploadUtil:
         """
         We check the pool file by initializing into dict format
 
+        The function "init_pool_dict" runs the tests to see if the file is
+        correct.
         """
 
         
         sep = "\t" if separator == "TSV" else ","
 
+        req_cols = ["barcode", "rcbarcode", "scaffold", 
+                    "pos", "strand"] 
 
         dtypes = {
                 "barcode": str,
@@ -185,14 +187,7 @@ class poolfileuploadUtil:
                 "nPastEnd": int
         }
 
-        pool_df = pd.read_table(poolfile_fp, sep=sep, dtype=dtypes)
-
-        req_cols = ["barcode", "rcbarcode", "scaffold", 
-                    "pos", "strand"] 
-
-        for x in req_cols:
-            if x not in pool_df.columns:
-                raise Exception(f"Required column name {x} not found in pool file.")
+        pool_df = pd.read_table(poolfile_fp, sep=sep)
 
         # Checking for duplicates
         barcodes_dict = {}
@@ -223,7 +218,6 @@ class poolfileuploadUtil:
 
 
     def get_genome_organism_name(self, genome_ref):
-        raise Exception("This part has not been written yet.")
         # Getting the organism name using WorkspaceClient
         ws = self.params['ws_obj'] 
         res = ws.get_objects2(

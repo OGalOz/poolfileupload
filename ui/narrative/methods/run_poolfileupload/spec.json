@@ -1,9 +1,9 @@
 {
-    "ver": "0.0.1",
+    "ver": "0.0.2",
     "authors": [
         "omreegaloz"
     ],
-    "contact": "",
+    "contact": "ogaloz@lbl.gov",
     "categories": ["active"],
     "widgets": {
         "input": null,
@@ -22,10 +22,28 @@
             }
         },
         {
-
-            "id": "genome_ref",
-            "optional": false,
+            "id": "genes_table_ref",
+            "optional": true,
             "advanced": false,
+            "allow_multiple": false,
+            "default_values": [""],
+            "field_type": "text",
+            "text_options": {
+                "valid_ws_types": ["KBaseRBTnSeq.InputGenesTable"]
+            }
+        },
+        {
+            "id": "organism_scientific_name",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [""],
+            "field_type": "text"
+        },
+        {
+            "id": "genome_ref",
+            "optional": true,
+            "advanced": true,
             "allow_multiple": false,
             "default_values": [""],
             "field_type": "text",
@@ -34,7 +52,7 @@
             }
         },
         {
-            "id": "pool_file_type",
+            "id": "RBTS_file_type",
             "optional": false,
             "advanced": false,
             "allow_multiple": false,
@@ -43,16 +61,20 @@
             "dropdown_options": {
                 "options": [
                 {
+                    "value": "genes_table",
+                    "display": "Genes Table"
+                },
+                {
+                    "value": "experiments",
+                    "display": "Experiments"
+                },
+                {
                     "value": "poolfile",
                     "display": "Pool File"
                 },
                 {
                     "value": "poolcount",
                     "display": "Pool Count"
-                },
-                {
-                    "value": "experiments",
-                    "display": "Experiments"
                 }
                 ]
             }
@@ -90,22 +112,6 @@
             }
         },
         {
-            "id": "run_method",
-            "optional": false,
-            "advanced": true,
-            "allow_multiple": false,
-            "default_values": [ "poolcount" ],
-            "field_type": "dropdown",
-            "dropdown_options": {
-                "options": [
-                {
-                    "value": "poolcount",
-                    "display": "Pool Count"
-                }
-                ]
-            }
-        },
-        {
             "id": "output_names",
             "optional": false,
             "advanced": false,
@@ -131,14 +137,18 @@
                     "target_property": "workspace_id"
                 },
                 {
-                    "input_parameter": "genome_ref",
-                    "target_property": "genome_ref",
+                    "input_parameter": "genes_table_ref",
+                    "target_property": "genes_table_ref",
                     "target_type_transform": "resolved-ref"
 
                 },              
                 {
-                    "input_parameter": "pool_file_type",
-                    "target_property": "pool_file_type"
+                    "input_parameter": "organism_scientific_name",
+                    "target_property": "organism_scientific_name"
+                },
+                {
+                    "input_parameter": "RBTS_file_type",
+                    "target_property": "RBTS_file_type"
                 },
                 {
                     "input_parameter": "description",

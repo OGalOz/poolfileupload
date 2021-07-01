@@ -36,7 +36,7 @@ class expsfileuploadUtil:
         params should include:
             username,
             staging_file_names,
-            genes_table_ref,
+            genome_ref,
             description,
             output_names
         """
@@ -110,7 +110,7 @@ class expsfileuploadUtil:
 
         # We create the data for the object
         exps_data = {
-            "file_type": "KBaseRBTnSeq.ExperimentsTable",
+            "file_type": "KBasePoolTSV.Experiments",
             "expsfile": res_handle["hid"],
             # below should be shock
             "handle_type": res_handle["type"],
@@ -120,11 +120,10 @@ class expsfileuploadUtil:
             "file_name": res_handle["file_name"],
             "utc_created": str(date_time),
             "column_header_list": column_header_list,
-            "column_headers_str": ", ".join(column_header_list),
             "num_lines": str(num_rows),
-            "related_genes_table_ref": self.params["genes_table_ref"],
+            "related_genome_ref": self.params["genome_ref"],
             "related_organism_scientific_name": self.get_genome_organism_name(
-                self.params["genes_table_ref"]
+                self.params["genome_ref"]
             ),
             "description": self.params["description"],
         }
@@ -142,7 +141,7 @@ class expsfileuploadUtil:
             "id": ws_id,
             "objects": [
                 {
-                    "type": "KBaseRBTnSeq.ExperimentsTable",
+                    "type": "KBasePoolTSV.Experiments",
                     "data": exps_data,
                     "name": expsfile_name,
                 }
@@ -165,7 +164,7 @@ class expsfileuploadUtil:
         for p in [
             "username",
             "staging_file_names",
-            "genes_table_ref",
+            "genome_ref",
             "description",
             "output_names"
         ]:
@@ -223,7 +222,6 @@ class expsfileuploadUtil:
 
 
     def get_genome_organism_name(self, genome_ref):
-        raise Exception("This part has not been written yet.")
         # Getting the organism name using WorkspaceClient
         ws = self.params["ws_obj"]
         res = ws.get_objects2(

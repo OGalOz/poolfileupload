@@ -5,6 +5,7 @@ import os
 from Utils.poolfileuploadUtilClient import poolfileuploadUtil
 from Utils.expsfileuploadUtilClient import expsfileuploadUtil
 from Utils.poolcountuploadUtilClient import poolcountfileuploadUtil
+from Utils.genetableuploadUtilClient import genetableuploadUtil
 from Utils.funcs import check_output_name
 from installed_clients.KBaseReportClient import KBaseReport
 from installed_clients.WorkspaceClient import Workspace
@@ -51,11 +52,10 @@ class poolfileupload:
         :param params: instance of mapping from String to unspecified object
             'workspace_name' (str):, 
             'workspace_id' (int): e.g. 62550, 
-            'genome_ref' (str): '62550/2/1', 
-            'pool_file_type' (str): 'poolfile' or 'poolcount' or 'experiments', 
+            'genes_table_ref' (str): '62550/2/1', 
+            'pool_file_type' (str): 'genes_table' or 'poolfile' or 'poolcount' or 'experiments', 
             'description' (str): Free string 
             'sep_type': 'TSV' or 'CSV'
-            'run_method': 'poolcount', u
             'staging_file_names' (list<str>): list<filenames> 
             'output_names' list<str>: List<Free string> - Correlate to staging_file_names
         :returns: instance of type "ReportResults" -> structure: parameter
@@ -68,8 +68,6 @@ class poolfileupload:
         params['shared_folder'] = self.shared_folder
         token = os.environ.get('KB_AUTH_TOKEN', None)
         ws = Workspace(self.ws_url, token=token)
-
-
         params['workspace_id'] =  ws.get_workspace_info({'workspace': params['workspace_name']})[0]
         params['ws_obj'] = ws
         params['username'] = ctx['user_id']
@@ -87,17 +85,29 @@ class poolfileupload:
             raise Exception("Did not get param pool_file_type")
         else:
             pft = params['pool_file_type']
-            if pft == 'poolfile':
-                pfu = poolfileuploadUtil(params)
-                result = pfu.upload_poolfile()
-            elif pft == 'poolcount':
-                pcfu = poolcountfileuploadUtil(params)
-                result = pcfu.upload_poolcountfile()
-            elif pft == 'experiments':
-                expsfu = expsfileuploadUtil(params)
-                result = expsfu.upload_expsfile()
+            if pft in ['experiments', 'poolfile', 'poolcount']:
+                if params['genes_table_ref'] == "":
+                    raise Exception(f"When uploading {pft} files you must reference a genes table object.")
+                if "organism_scientific_name" in params or params["organism_scientific_name"] != "":
+                    raise Exception("When uploading anything besides a genes table, do not provide the organism's scientific name (under Advanced Inputs).")
+                if pft == 'poolfile':
+                    pf_util = poolfileuploadUtil(params)
+                    result = pf_util.upload_poolfile()
+                elif pft == 'poolcount':
+                    pcf_util = poolcountfileuploadUtil(params)
+                    result = pcf_util.upload_poolcountfile()
+                else:
+                    expsf_util = expsfileuploadUtil(params)
+                    result = expsf_util.upload_expsfile()
+            elif pft == "genes_table":
+                if "organism_scientific_name" not in params or params["organism_scientific_name"] == "":
+                    raise Exception("When uploading a genes table, you must provide the organism's scientific name (under Advanced Inputs).")
+                if "genome_ref" not in params or params["genome_ref"] == "":
+                    raise Exception("When uploading a genes table, you must provide a genome object reference (under Advanced).")
+                gene_table_util = genetableuploadUtil(params)
+                result = gene_table_util.upload_genes_table()
             else:
-                raise Exception("Did not recognize pool_file_type for upload")
+                raise Exception(f"Did not recognize pool_file_type {pft} for upload")
 
 
 
