@@ -20,7 +20,7 @@ class genetableuploadUtil:
         self.shared_folder = params["shared_folder"]
         self.scratch_folder = os.path.join(params["shared_folder"], "scratch")
 
-    def upload_genetable(self):
+    def upload_genes_table(self):
         """
         The upload method
 
