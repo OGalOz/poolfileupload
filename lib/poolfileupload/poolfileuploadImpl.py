@@ -81,10 +81,10 @@ class poolfileupload:
 
 
 
-        if 'pool_file_type' not in params:
-            raise Exception("Did not get param pool_file_type")
+        if 'RBTS_file_type' not in params:
+            raise Exception("Did not get param RBTS_file_type")
         else:
-            pft = params['pool_file_type']
+            pft = params['RBTS_file_type']
             if pft in ['experiments', 'poolfile', 'poolcount']:
                 if params['genes_table_ref'] == "":
                     raise Exception(f"When uploading {pft} files you must reference a genes table object.")
