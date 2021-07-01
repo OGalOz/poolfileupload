@@ -158,11 +158,6 @@
                     "input_parameter": "sep_type",
                     "target_property": "sep_type"
                 },
-
-                {
-                    "input_parameter": "run_method",
-                    "target_property": "run_method"
-                },
                 {
                     "input_parameter": "staging_file_names",
                     "target_property": "staging_file_names"

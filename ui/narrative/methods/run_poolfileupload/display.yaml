@@ -40,6 +40,13 @@ parameters :
             The Gene Table to which this pool file corresponds
         long-hint : |
             The Gene Table to which the pool file corresponds.
+    genome_ref :
+        ui-name : |
+            Related Genome Object
+        short-hint : |
+            If uploading a gene table, to which genome object does it relate? 
+        long-hint : |
+            The Genome object to which the gene table corresponds.
     organism_scientific_name :
         ui-name : |
             Organism Name
@@ -47,7 +54,7 @@ parameters :
             If uploading a Genes Table, give the Organism's Scientific Name
         long-hint : |
             If uploading a Genes Table, give the Organism's Scientific Name.
-    pool_file_type :
+    RBTS_file_type :
         ui-name : |
             File Type
         short-hint : |
