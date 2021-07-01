@@ -143,6 +143,12 @@
 
                 },              
                 {
+                    "input_parameter": "genome_ref",
+                    "target_property": "genome_ref",
+                    "target_type_transform": "resolved-ref"
+
+                },              
+                {
                     "input_parameter": "organism_scientific_name",
                     "target_property": "organism_scientific_name"
                 },
