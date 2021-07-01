@@ -187,7 +187,7 @@ class genetableuploadUtil:
                 'GC': float,
                 'nTA': int
                 }
-        genes_df = pd.read_table(genes_fp, sep=sep, dtype=genes_dtypes)
+        genes_df = pd.read_table(genetable_fp, sep=sep, dtype=genes_dtypes)
 
         req_cols = ['locusId', 'sysName', 'type', 'scaffoldId', 'begin', 'end', 'strand',
                     'name', 'desc', 'GC', 'nTA']
