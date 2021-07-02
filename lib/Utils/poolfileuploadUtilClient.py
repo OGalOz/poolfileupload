@@ -235,5 +235,8 @@ class poolfileuploadUtil:
                 ]
             }
         )
+        logging.info("Workspace get objects 2 results:")
+        logging.info(res)
+
         scientific_name = res["data"][0]["data"]["related_organism_scientific_name"]
         return scientific_name
