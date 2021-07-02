@@ -169,23 +169,24 @@ class poolfileuploadUtil:
         
         sep = "\t" if separator == "TSV" else ","
 
-
+        """
         dtypes = {
                 "barcode": str,
                 "rcbarcode": str,
                 "scaffold": str,
-                "nTot": int,
-                "n": int,
+                "nTot": 'Int64',
+                "n": 'Int64',
                 "strand": str,
-                "pos": int,
-                "n2": int,
+                "pos": 'Int64',
+                "n2": 'Int64',
                 "scaffold2": str,
                 "strand2": str,
-                "pos2": int,
-                "nPastEnd": int
+                "pos2": 'Int64',
+                "nPastEnd": 'Int64'
         }
+        """
 
-        pool_df = pd.read_table(poolfile_fp, sep=sep, dtype=dtypes)
+        pool_df = pd.read_table(poolfile_fp, sep=sep)
 
         req_cols = ["barcode", "rcbarcode", "scaffold", 
                     "pos", "strand"] 
