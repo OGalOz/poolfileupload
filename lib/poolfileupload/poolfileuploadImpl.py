@@ -80,6 +80,7 @@ class poolfileupload:
             raise Exception(f"Did not recognize sep_type: {params['sep_type']}")
 
 
+        logging.info(params)
 
         if 'RBTS_file_type' not in params:
             raise Exception("Did not get param RBTS_file_type")
@@ -88,10 +89,14 @@ class poolfileupload:
             if pft in ['experiments', 'poolfile', 'poolcount']:
                 if params['genes_table_ref'] == "":
                     raise Exception(f"When uploading {pft} files you must reference a genes table object.")
-                if "organism_scientific_name" in params and params["organism_scientific_name"] != "":
-                    raise Exception("When uploading anything besides a genes table, "
+
+                if "organism_scientific_name" in params and params["organism_scientific_name"] != "" and \
+                        params["organism_scientific_name"] is not None and \
+                        params["organism_scientific_name"] != "None":
+                    logging.warning("When uploading anything besides a genes table, "
                                     "do not provide the organism's name (under Advanced Inputs)."
-                                    f" Current name given: '{params['organism_scientific_name']}'.")
+                                    f" Current name given: '{params['organism_scientific_name']}'."
+                                    " This new scientific name will not be used.")
                 if pft == 'poolfile':
                     pf_util = poolfileuploadUtil(params)
                     result = pf_util.upload_poolfile()
