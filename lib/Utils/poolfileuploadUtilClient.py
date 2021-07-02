@@ -164,7 +164,7 @@ class poolfileuploadUtil:
 
         if "model_used" not in prms or prms["model_used"] == "" \
             or prms["model_used"] is None:
-                logging.warning("When uploading a poolfile, please include a model reference name.")
+            logging.warning("When uploading a poolfile, please include a model reference name.")
             prms["model_used"] = "Unknown."
 
     def check_pool_file(self, poolfile_fp, separator):
