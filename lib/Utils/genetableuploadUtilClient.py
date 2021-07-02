@@ -135,7 +135,7 @@ class genetableuploadUtil:
             "id": ws_id,
             "objects": [
                 {
-                    "type": "KBaseRBTnSeq.genetable",
+                    "type": "KBaseRBTnSeq.InputGenesTable",
                     "data": genes_data,
                     "name": genetable_name,
                 }
