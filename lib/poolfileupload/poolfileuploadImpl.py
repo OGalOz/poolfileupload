@@ -88,8 +88,10 @@ class poolfileupload:
             if pft in ['experiments', 'poolfile', 'poolcount']:
                 if params['genes_table_ref'] == "":
                     raise Exception(f"When uploading {pft} files you must reference a genes table object.")
-                if "organism_scientific_name" in params or params["organism_scientific_name"] != "":
-                    raise Exception("When uploading anything besides a genes table, do not provide the organism's scientific name (under Advanced Inputs).")
+                if "organism_scientific_name" in params and params["organism_scientific_name"] != "":
+                    raise Exception("When uploading anything besides a genes table, "
+                                    "do not provide the organism's name (under Advanced Inputs)."
+                                    f" Current name given: '{params['organism_scientific_name']}'.")
                 if pft == 'poolfile':
                     pf_util = poolfileuploadUtil(params)
                     result = pf_util.upload_poolfile()
