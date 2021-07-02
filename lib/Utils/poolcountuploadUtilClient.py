@@ -191,19 +191,19 @@ class poolcountfileuploadUtil:
             if p not in self.params:
                 raise ValueError('"{}" parameter is required, but missing'.format(p))
 
-    def get_genome_organism_name(self, genome_ref):
-        raise Exception("This part has not been written yet.")
+
+    def get_genome_organism_name(self, gene_table_ref):
         # Getting the organism name using WorkspaceClient
         ws = self.params['ws_obj'] 
         res = ws.get_objects2(
             {
                 "objects": [
                     {
-                        "ref": genome_ref,
-                        "included": ["scientific_name"],
+                        "ref": gene_table_ref,
+                        "included": ["related_organism_scientific_name"],
                     }
                 ]
             }
         )
-        scientific_name = res["data"][0]["data"]["scientific_name"]
+        scientific_name = res["data"][0]["data"]["related_organism_scientific_name"]
         return scientific_name
