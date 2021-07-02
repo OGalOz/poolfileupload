@@ -41,6 +41,14 @@
             "field_type": "text"
         },
         {
+            "id": "model_used",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [""],
+            "field_type": "text"
+        },
+        {
             "id": "genome_ref",
             "optional": true,
             "advanced": true,
@@ -151,6 +159,10 @@
                 {
                     "input_parameter": "organism_scientific_name",
                     "target_property": "organism_scientific_name"
+                },
+                {
+                    "input_parameter": "model_used",
+                    "target_property": "model_used"
                 },
                 {
                     "input_parameter": "RBTS_file_type",

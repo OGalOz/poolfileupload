@@ -54,6 +54,13 @@ parameters :
             If uploading a Genes Table, give the Organism's Scientific Name
         long-hint : |
             If uploading a Genes Table, give the Organism's Scientific Name.
+    model_used :
+        ui-name : |
+            Model Name
+        short-hint : |
+            If uploading a Pool File, give the Pool File's Related Model Name
+        long-hint : |
+            If uploading a Pool File, give the Pool File's Related Model Name
     RBTS_file_type :
         ui-name : |
             File Type

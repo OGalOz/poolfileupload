@@ -120,6 +120,7 @@ class poolfileuploadUtil:
             "file_name": res_handle["file_name"],
             "utc_created": str(date_time),
             "related_genes_table_ref": self.params["genes_table_ref"],
+            "model_used": self.params["model_used"],
             "related_organism_scientific_name": self.get_genome_organism_name(
                 self.params["genes_table_ref"]
             ),
@@ -149,6 +150,7 @@ class poolfileuploadUtil:
         }
 
     def validate_import_poolfile_from_staging_params(self):
+        prms = self.params
         # check for required parameters
         for p in [
             "username",
@@ -157,8 +159,13 @@ class poolfileuploadUtil:
             "description",
             "output_names"
         ]:
-            if p not in self.params:
+            if p not in prms:
                 raise ValueError('"{}" parameter is required, but missing'.format(p))
+
+        if "model_used" not in prms or prms["model_used"] == "" \
+            or prms["model_used"] is None:
+                logging.warning("When uploading a poolfile, please include a model reference name.")
+            prms["model_used"] = "Unknown."
 
     def check_pool_file(self, poolfile_fp, separator):
         """
