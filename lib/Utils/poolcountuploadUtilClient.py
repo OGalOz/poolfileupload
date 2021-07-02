@@ -98,7 +98,7 @@ class poolcountfileuploadUtil:
 
             # We create the data for the object
             poolcount_data = {
-                "file_type": "KBaseRBTnSeq.PoolCount",
+                "file_type": "KBaseRBTnSeq.RBTS_PoolCount",
                 "poolcount": res_handle["hid"],
                 # below should be shock
                 "handle_type": res_handle["type"],
@@ -126,7 +126,7 @@ class poolcountfileuploadUtil:
                 "id": ws_id,
                 "objects": [
                     {
-                        "type": "KBaseRBTnSeq.PoolCount",
+                        "type": "KBaseRBTnSeq.RBTS_PoolCount",
                         "data": poolcount_data,
                         "name": crnt_pc_op_name,
                     }

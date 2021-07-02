@@ -110,7 +110,7 @@ class expsfileuploadUtil:
 
         # We create the data for the object
         exps_data = {
-            "file_type": "KBaseRBTnSeq.ExperimentsTable",
+            "file_type": "KBaseRBTnSeq.RBTS_ExperimentsTable",
             "expsfile": res_handle["hid"],
             # below should be shock
             "handle_type": res_handle["type"],
@@ -142,7 +142,7 @@ class expsfileuploadUtil:
             "id": ws_id,
             "objects": [
                 {
-                    "type": "KBaseRBTnSeq.ExperimentsTable",
+                    "type": "KBaseRBTnSeq.RBTS_ExperimentsTable",
                     "data": exps_data,
                     "name": expsfile_name,
                 }

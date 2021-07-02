@@ -106,7 +106,7 @@ class genetableuploadUtil:
 
         # We create the data for the object
         genes_data = {
-            "file_type": "KBaseRBTnSeq.InputGenesTable",
+            "file_type": "KBaseRBTnSeq.RBTS_InputGenesTable",
             "input_genes_table": res_handle["hid"],
             # below should be shock
             "handle_type": res_handle["type"],
@@ -135,7 +135,7 @@ class genetableuploadUtil:
             "id": ws_id,
             "objects": [
                 {
-                    "type": "KBaseRBTnSeq.InputGenesTable",
+                    "type": "KBaseRBTnSeq.RBTS_InputGenesTable",
                     "data": genes_data,
                     "name": genetable_name,
                 }

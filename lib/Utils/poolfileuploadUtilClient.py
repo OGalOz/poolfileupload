@@ -105,7 +105,7 @@ class poolfileuploadUtil:
 
         # We create the data for the object
         pool_data = {
-            "file_type": "KBaseRBTnSeq.PoolFile",
+            "file_type": "KBaseRBTnSeq.RBTS_PoolFile",
             "poolfile": res_handle["hid"],
             # below should be shock
             "handle_type": res_handle["type"],
@@ -132,7 +132,7 @@ class poolfileuploadUtil:
             "id": ws_id,
             "objects": [
                 {
-                    "type": "KBaseRBTnSeq.PoolFile",
+                    "type": "KBaseRBTnSeq.RBTS_PoolFile",
                     "data": pool_data,
                     "name": poolfile_name,
                 }
