@@ -86,7 +86,7 @@ class poolfileupload:
             raise Exception("Did not get param RBTS_file_type")
         else:
             pft = params['RBTS_file_type']
-            if pft in ['experiments', 'poolfile', 'poolcount']:
+            if pft in ['experiments', 'poolfile', 'poolcount', 'model']:
                 if params['genes_table_ref'] == "":
                     raise Exception(f"When uploading {pft} files you must reference a genes table object.")
 
@@ -103,9 +103,13 @@ class poolfileupload:
                 elif pft == 'poolcount':
                     pcf_util = poolcountfileuploadUtil(params)
                     result = pcf_util.upload_poolcountfile()
-                else:
+                elif pft == 'experiments':
                     expsf_util = expsfileuploadUtil(params)
                     result = expsf_util.upload_expsfile()
+                else:
+                    # model
+                    modelf_util  = modeluploadUtil(params)
+                    result = modelf_util.upload_model()
             elif pft == "genes_table":
                 if "organism_scientific_name" not in params or params["organism_scientific_name"] == "":
                     raise Exception("When uploading a genes table, you must provide the organism's scientific name (under Advanced Inputs).")

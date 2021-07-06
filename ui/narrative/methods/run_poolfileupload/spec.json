@@ -33,6 +33,17 @@
             }
         },
         {
+            "id": "model_ref",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [""],
+            "field_type": "text",
+            "text_options": {
+                "valid_ws_types": ["KBaseRBTnSeq.RBTS_Model"]
+            }
+        },
+        {
             "id": "organism_scientific_name",
             "optional": true,
             "advanced": true,
@@ -41,7 +52,83 @@
             "field_type": "text"
         },
         {
-            "id": "model_used",
+            "id": "standard_model_name",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [""],
+            "field_type": "dropdown",
+            "dropdown_options": {
+                "options": [{
+                    "value": "Custom",
+                    "display": "Custom - (Advanced)"
+                },
+                {
+                    "value": "Unknown",
+                    "display": "Unknown - (Find)"
+                },
+                {
+                    "value": "Sc_Tn5",
+                    "display": "Sc_Tn5"
+                },
+                {
+                    "value": "ezTn5_Tet_Bifido",
+                    "display": "ezTn5_Tet_Bifido"
+                },
+                 {
+                    "value": "ezTn5_kan1",
+                    "display": "ezTn5_kan1"
+                },
+                 {
+                    "value": "ezTn5_kanU",
+                    "display": "ezTn5_kanU"
+                },
+                {
+                    "value": "magic_Tn5",
+                    "display": "magic_Tn5"
+                },
+                {
+                    "value": "magic_mariner",
+                    "display": "magic_mariner"
+                },
+                {
+                    "value": "magic_mariner.2",
+                    "display": "magic_mariner.2"
+                },
+                {
+                    "value": "pHIMAR_kan",
+                    "display": "pHIMAR_kan"
+                },
+                {
+                    "value": "pKMW3",
+                    "display": "pKMW3"
+                },
+                {
+                    "value": "pKMW3_universal",
+                    "display": "pKMW3_universal"
+                },
+                {
+                    "value": "pKMW7",
+                    "display": "pKMW7"
+                },
+                {
+                    "value": "pKMW7_U",
+                    "display": "pKMW7_U"
+                }]
+            }
+
+        },
+
+        {
+            "id": "model_str",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [""],
+            "field_type": "text"
+        },
+        {
+            "id": "past_end_str",
             "optional": true,
             "advanced": true,
             "allow_multiple": false,
@@ -83,6 +170,10 @@
                 {
                     "value": "poolcount",
                     "display": "Pool Count"
+                },
+                {
+                    "value": "model",
+                    "display": "Model"
                 }
                 ]
             }
@@ -161,8 +252,21 @@
                     "target_property": "organism_scientific_name"
                 },
                 {
-                    "input_parameter": "model_used",
-                    "target_property": "model_used"
+                    "input_parameter": "model_ref",
+                    "target_property": "model_ref",
+                    "target_type_transform": "resolved-ref"
+                },
+                {
+                    "input_parameter": "standard_model_name",
+                    "target_property": "standard_model_name"
+                },
+                {
+                    "input_parameter": "model_str",
+                    "target_property": "model_str"
+                },
+                {
+                    "input_parameter": "past_end_str",
+                    "target_property": "past_end_str"
                 },
                 {
                     "input_parameter": "RBTS_file_type",

@@ -47,6 +47,34 @@ parameters :
             If uploading a gene table, to which genome object does it relate? 
         long-hint : |
             The Genome object to which the gene table corresponds.
+    model_ref :
+        ui-name : |
+            Model Used
+        short-hint : |
+            If uploading a Pool File, give the Pool File's Related Model
+        long-hint : |
+            If uploading a Pool File, give the Pool File's Related Model
+    standard_model_name :
+        ui-name : |
+            Standard Model Name 
+        short-hint : |
+            If uploading a Model, Label its standard name or "Custom" if it isn't part of existing options. 
+        long-hint : |
+            If uploading a Model, Label its standard name or "Custom" if it isn't part of existing options. 
+    model_str :
+        ui-name : |
+            Model Sequence
+        short-hint : |
+            If uploading a Model, paste its sequence here, e.g. "nnnACTNNNGCT" 
+        long-hint : |
+            If uploading a Model, paste its sequence here, e.g. "nnnACTNNNGCT" 
+    past_end_str :
+        ui-name : |
+            Past End Sequence
+        short-hint : |
+            If uploading a Model, paste its past-end sequence here, e.g. "ACTGCTGGG" 
+        long-hint : |
+            If uploading a Model, paste its past-end sequence here, e.g. "ACTGCTGGG" 
     organism_scientific_name :
         ui-name : |
             Organism Name
@@ -54,13 +82,6 @@ parameters :
             If uploading a Genes Table, give the Organism's Scientific Name
         long-hint : |
             If uploading a Genes Table, give the Organism's Scientific Name.
-    model_used :
-        ui-name : |
-            Model Name
-        short-hint : |
-            If uploading a Pool File, give the Pool File's Related Model Name
-        long-hint : |
-            If uploading a Pool File, give the Pool File's Related Model Name
     RBTS_file_type :
         ui-name : |
             File Type
