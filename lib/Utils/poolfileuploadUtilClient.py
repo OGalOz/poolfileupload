@@ -120,7 +120,7 @@ class poolfileuploadUtil:
             "file_name": res_handle["file_name"],
             "utc_created": str(date_time),
             "related_genes_table_ref": self.params["genes_table_ref"],
-            "model_used": self.params["model_used"],
+            "model_ref": self.params["model_ref"],
             "related_organism_scientific_name": self.get_genome_organism_name(
                 self.params["genes_table_ref"]
             ),
@@ -162,10 +162,9 @@ class poolfileuploadUtil:
             if p not in prms:
                 raise ValueError('"{}" parameter is required, but missing'.format(p))
 
-        if "model_used" not in prms or prms["model_used"] == "" \
-            or prms["model_used"] is None:
-            logging.warning("When uploading a poolfile, please include a model reference name.")
-            prms["model_used"] = "Unknown."
+        if "model_ref" not in prms or prms["model_ref"] == "" \
+            or prms["model_ref"] is None:
+            raise Exception("When uploading a poolfile, you must include a model ref.")
 
     def check_pool_file(self, poolfile_fp, separator):
         """
