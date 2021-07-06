@@ -155,8 +155,8 @@ class modeluploadUtil:
                 past_end_str = 'TCGACGGCTTGGTTTCATCAGCCATCCGCTTGCCCTCATCTGTTACGCCGGCGGTAGCCGGCCAGCCTCGCAGAGC'
 
 
-        logging.info("Model String: '{model_str}'."
-                    " Past End String: '{past_end_str}'.")
+        logging.info(f"Model String: '{model_str}'."
+                    f" Past End String: '{past_end_str}'.")
 
         return model_str, past_end_str
 
