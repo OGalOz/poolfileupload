@@ -42,7 +42,7 @@ class modeluploadUtil:
         else:
             model_name = op_nms[0]
 
-        model_str, past_end_str = get_model_and_pastEnd_strs(self.params["standard_model_name"])
+        model_str, past_end_str = self.get_model_and_pastEnd_strs(self.params["standard_model_name"])
 
         # We create a better Description by adding date time and username
         date_time = datetime.datetime.utcnow()
@@ -103,10 +103,19 @@ class modeluploadUtil:
                 raise ValueError(f" input model_str cannot be '' or 'None' when creating a custom model.")
 
     def get_model_and_pastEnd_strs(self, standard_model_name):
+        """
+        Description:
+            In this function we get the two parts of the model-
+            The model string, which is the part of the transposon in which the barcode sits.
+            And the past end string, which is after the transposon.
+        Returns:
+            
+        """
 
         if standard_model_name == "Custom":
             model_str = self.params["model_str"]
             past_end_str = self.params["past_end_str"]
+            self.check_model_parts(model_str, past_end_str)
         else:
             if standard_model_name ==  "Sc_Tn5":
                 model_str = "nnnnnGATGTCCACGAGGTCTCTNNNNNNNNNNNNNNNNNNNNCGTACGCTGCAGGTCGACCAGCAGCTATGACATGAAGATGTGTATAAGAGACAG" 
@@ -150,6 +159,26 @@ class modeluploadUtil:
                     " Past End String: '{past_end_str}'.")
 
         return model_str, past_end_str
+
+    def check_model_parts(self, model_str, past_end_str):
+        """
+        Description:
+            Making sure the model string and past end string make sense
+        Args:
+            model_str (str): 
+            past_end_str (str):
+        """
+        possible_values = ["A","C","T","G","N"]
+
+        for x in model_str:
+            if x.upper() not in possible_values:
+                raise Exception(f"Unknown character: '{x}'. possible values are" \
+                                + " " + ", ".join(possible_values))
+        for x in past_end_str:
+            if x not in possible_values:
+                raise Exception(f"Unknown character: '{x}', possible values are" \
+                                + " " + ", ".join(possible_values))
+
 
 
 
