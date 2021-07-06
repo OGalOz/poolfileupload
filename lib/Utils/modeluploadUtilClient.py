@@ -55,7 +55,8 @@ class modeluploadUtil:
             "utc_created": str(date_time),
             "standard_model_name": self.params["standard_model_name"],
             "model_string": model_str,
-            "past_end_string": past_end_str
+            "past_end_string": past_end_str,
+            "description": "Manual Upload: " + self.params["description"]
         }
 
 

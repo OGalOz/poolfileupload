@@ -6,6 +6,7 @@ from Utils.poolfileuploadUtilClient import poolfileuploadUtil
 from Utils.expsfileuploadUtilClient import expsfileuploadUtil
 from Utils.poolcountuploadUtilClient import poolcountfileuploadUtil
 from Utils.genetableuploadUtilClient import genetableuploadUtil
+from Utils.modeluploadUtilClient import modeluploadUtil 
 from Utils.funcs import check_output_name
 from installed_clients.KBaseReportClient import KBaseReport
 from installed_clients.WorkspaceClient import Workspace
@@ -53,7 +54,7 @@ class poolfileupload:
             'workspace_name' (str):, 
             'workspace_id' (int): e.g. 62550, 
             'genes_table_ref' (str): '62550/2/1', 
-            'pool_file_type' (str): 'genes_table' or 'poolfile' or 'poolcount' or 'experiments', 
+            'pool_file_type' (str): 'genes_table' or 'poolfile' or 'poolcount' or 'experiments' or 'model'
             'description' (str): Free string 
             'sep_type': 'TSV' or 'CSV'
             'staging_file_names' (list<str>): list<filenames> 
