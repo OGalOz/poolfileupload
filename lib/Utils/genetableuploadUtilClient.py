@@ -102,7 +102,6 @@ class genetableuploadUtil:
         date_time = datetime.datetime.utcnow()
         #new_desc = "Uploaded by {} on (UTC) {} using Uploader. User Desc: ".format(
         #        self.params['username'], str(date_time))
-        fastq_refs = []
 
         # We create the data for the object
         genes_data = {
@@ -121,8 +120,6 @@ class genetableuploadUtil:
             "related_genome_ref": self.params["genome_ref"],
             "related_organism_scientific_name": self.params["organism_scientific_name"]
         }
-        if "genome_ref" in self.params:
-            genes_data["related_genome_ref"] = self.params["genome_ref"]
 
 
 
