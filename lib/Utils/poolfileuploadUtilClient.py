@@ -210,7 +210,11 @@ class poolfileuploadUtil:
                 barcodes_dict[barcode] = 1
         for ix, strand in pool_df["strand"].iteritems():
             if strand not in ["+", "-"]:
-                raise Exception(f"Incorrect strand value: {strand} at row {ix}")
+                if pool_df["scaffold"].iloc[ix] != "pastEnd":
+                    raise Exception(f"Incorrect strand value: {strand} at row {ix}")
+                else:
+                    logging.info(f"Found pastEnd hit at row {ix}")
+
 
         for ix, pos in pool_df["pos"].iteritems():
             if pos < 0:
