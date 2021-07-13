@@ -40,7 +40,7 @@
             "default_values": [""],
             "field_type": "text",
             "text_options": {
-                "valid_ws_types": ["KBaseRBTnSeq.RBTS_Model"]
+                "valid_ws_types": ["KBaseRBTnSeq.RBTS_TransposonModel"]
             }
         },
         {
