@@ -132,6 +132,7 @@ class fitnessmatrixuploadUtil:
             "related_genes_table_ref": self.params["genes_table_ref"],
             "poolcounts_used": [],
             "poolcounts_used_str": "NA",
+            "related_experiments_ref": self.params["experiments_ref"],
             "related_organism_scientific_name": self.get_genome_organism_name(
                 self.params["genes_table_ref"]
             ),
@@ -173,7 +174,7 @@ class fitnessmatrixuploadUtil:
             "output_names"
         ]:
             if p not in prms:
-                raise ValueError('"{}" parameter is required, but missing'.format(p))
+                raise ValueError('When uploading a fitness matrix, "{}" parameter is required, but missing'.format(p))
 
 
     def check_matrix_files(self, fitness_matrix_fp, t_score_matrix_fp, separator):

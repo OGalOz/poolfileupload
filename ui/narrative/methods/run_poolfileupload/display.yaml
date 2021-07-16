@@ -54,6 +54,13 @@ parameters :
             If uploading a Pool File, give the Pool File's Related Model
         long-hint : |
             If uploading a Pool File, give the Pool File's Related Model
+    experiments_ref :
+        ui-name : |
+            Experiment Table Used
+        short-hint : |
+            If uploading a Fitness Matrix, give the related experiments table
+        long-hint : |
+            If uploading a Fitness Matrix, give the related experiments table
     standard_model_name :
         ui-name : |
             Standard Model Name 

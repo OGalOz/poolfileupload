@@ -44,6 +44,18 @@
             }
         },
         {
+            "id": "experiments_ref",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [""],
+            "field_type": "text",
+            "text_options": {
+                "valid_ws_types": ["KBaseRBTnSeq.RBTS_ExperimentsTable"]
+            }
+        },
+
+        {
             "id": "organism_scientific_name",
             "optional": true,
             "advanced": true,
@@ -260,6 +272,12 @@
                     "target_property": "model_ref",
                     "target_type_transform": "resolved-ref"
                 },
+                {
+                    "input_parameter": "experiments_ref",
+                    "target_property": "experiments_ref",
+                    "target_type_transform": "resolved-ref"
+                },
+
                 {
                     "input_parameter": "standard_model_name",
                     "target_property": "standard_model_name"
