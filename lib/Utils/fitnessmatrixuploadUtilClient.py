@@ -90,8 +90,8 @@ class fitnessmatrixuploadUtil:
             shutil.copyfile(fitnessmatrix_fp, new_fitness_matrix_fp)
             shutil.copyfile(t_scorematrix_fp, new_t_score_fp)
         else:
-            fit_df = pd.read_table(fitnessmatrix_fp, sep="\t")
-            t_score_df = pd.read_table(t_scorematrix_fp, sep="\t")
+            fit_df = pd.read_table(fitnessmatrix_fp, sep="\t", keep_default_na=False)
+            t_score_df = pd.read_table(t_scorematrix_fp, sep="\t", keep_default_na=False)
             fit_df.to_csv(new_fitness_matrix_fp, sep="\t", index=False)
             t_score_df.to_csv(new_t_score_fp, sep="\t", index=False)
 
@@ -200,8 +200,8 @@ class fitnessmatrixuploadUtil:
 
         req_cols = ["locusId", "sysName", "geneName", "desc"]
 
-        fitness_df = pd.read_table(fitness_matrix_fp, sep=sep)
-        t_score_df = pd.read_table(t_score_matrix_fp, sep=sep)
+        fitness_df = pd.read_table(fitness_matrix_fp, sep=sep, keep_default_na=False)
+        t_score_df = pd.read_table(t_score_matrix_fp, sep=sep, keep_default_na=False)
 
 
         for x in req_cols:
