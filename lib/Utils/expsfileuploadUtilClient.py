@@ -120,7 +120,7 @@ class expsfileuploadUtil:
             "file_name": res_handle["file_name"],
             "utc_created": str(date_time),
             "column_header_list": column_header_list,
-            "column_headers_str": ", ".join(column_header_list),
+            "num_cols": str(len(column_header_list)),
             "num_lines": str(num_rows),
             "related_genes_table_ref": self.params["genes_table_ref"],
             "related_organism_scientific_name": self.get_genome_organism_name(
