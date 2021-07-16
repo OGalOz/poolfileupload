@@ -117,7 +117,7 @@ class fitnessmatrixuploadUtil:
             "fit_scores_handle": fitness_res_handle["hid"],
             "t_scores_handle": t_score_res_handle["hid"],
             # below should be shock
-            "handle_type": res_handle["type"],
+            "handle_type": fitness_res_handle["type"],
             "fitness_shock_url": fitness_res_handle["url"],
             "t_scores_shock_url": t_score_res_handle["url"],
             "fitness_shock_node_id": fitness_res_handle["id"],
