@@ -172,6 +172,10 @@
                     "display": "Pool Count"
                 },
                 {
+                    "value": "fitness_matrix",
+                    "display": "Fitness Matrix"
+                },
+                {
                     "value": "model",
                     "display": "Model"
                 }

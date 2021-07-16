@@ -6,6 +6,7 @@ from Utils.poolfileuploadUtilClient import poolfileuploadUtil
 from Utils.expsfileuploadUtilClient import expsfileuploadUtil
 from Utils.poolcountuploadUtilClient import poolcountfileuploadUtil
 from Utils.genetableuploadUtilClient import genetableuploadUtil
+from Utils.fitnessmatrixuploadUtilClient import fitnessmatrixuploadUtil  
 from Utils.modeluploadUtilClient import modeluploadUtil 
 from Utils.funcs import check_output_name
 from installed_clients.KBaseReportClient import KBaseReport
@@ -87,10 +88,9 @@ class poolfileupload:
             raise Exception("Did not get param RBTS_file_type")
         else:
             pft = params['RBTS_file_type']
-            if pft in ['experiments', 'poolfile', 'poolcount', 'model']:
+            if pft in ['experiments', 'poolfile', 'poolcount', 'fitness_matrix', 'model']:
                 if params['genes_table_ref'] == "":
                     raise Exception(f"When uploading {pft} files you must reference a genes table object.")
-
                 if "organism_scientific_name" in params and params["organism_scientific_name"] != "" and \
                         params["organism_scientific_name"] is not None and \
                         params["organism_scientific_name"] != "None":
@@ -107,6 +107,14 @@ class poolfileupload:
                 elif pft == 'experiments':
                     expsf_util = expsfileuploadUtil(params)
                     result = expsf_util.upload_expsfile()
+                elif pft == 'fitness_matrix':
+                    num_stage = len(params['staging_file_names'])
+                    if num_stage != 2:
+                        raise Exception("When uploading a fitness matrix, upload both the fitness scores and the T-score files."
+                                        " The fitness score TSV file should be the first one, and the t-score should be the second."
+                                        f" Do not upload more than 2 files. Currently = {num_stage}.")
+                    fitness_matrix_util = fitnessmatrixuploadUtil(params)
+                    result = fitness_matrix_util.upload_fitnessmatrix()
                 else:
                     # model
                     modelf_util  = modeluploadUtil(params)
@@ -120,8 +128,6 @@ class poolfileupload:
                 result = gene_table_util.upload_genes_table()
             else:
                 raise Exception(f"Did not recognize pool_file_type {pft} for upload")
-
-
 
         text_message = "Finished uploading file \n"
         if pft != "poolcount":
