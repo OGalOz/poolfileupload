@@ -222,13 +222,16 @@ class fitnessmatrixuploadUtil:
                 raise Exception(f"locusIds not equal at index {ix} in fitness and t score files."
                                 f"{str(fitness_df['locusId'])} != {str(t_score_df['locusId'])}")
             if fitness_df["sysName"].iloc[ix] != t_score_df["sysName"].iloc[ix]:
-                raise Exception(f"sysNames not equal at index {ix} in fitness and t score files."
-                                f"{str(fitness_df['sysName'])} != {str(t_score_df['sysName'])}")
+                if not (pd.isnull(fitness_df["sysName"].iloc[ix]) and pd.isnull(fitness_df["sysName"].iloc[ix])):
+                    raise Exception(f"sysNames not equal at index {ix} in fitness and t score files."
+                                    f"{str(fitness_df['sysName'])} != {str(t_score_df['sysName'])}")
             if fitness_df["geneName"].iloc[ix] != t_score_df["geneName"].iloc[ix]:
-                raise Exception(f"geneNames not equal at index {ix} in fitness and t score files."
+                if not (pd.isnull(fitness_df["geneName"].iloc[ix]) and pd.isnull(fitness_df["geneName"].iloc[ix])):
+                    raise Exception(f"geneNames not equal at index {ix} in fitness and t score files."
                                 f"{str(fitness_df['geneName'])} != {str(t_score_df['geneName'])}")
             if fitness_df["desc"].iloc[ix] != t_score_df["desc"].iloc[ix]:
-                raise Exception(f"descriptions not equal at index {ix} in fitness and t score files."
+                if not (pd.isnull(fitness_df["desc"].iloc[ix]) and pd.isnull(fitness_df["desc"].iloc[ix])):
+                    raise Exception(f"descriptions not equal at index {ix} in fitness and t score files."
                                 f"{str(fitness_df['desc'])} != {str(t_score_df['desc'])}")
             if locusId in locusIds_dict:
                 raise Exception(f"Duplicate locusIds at index {ix}")
