@@ -47,9 +47,9 @@ parameters :
             If uploading a gene table, to which genome object does it relate? 
         long-hint : |
             The Genome object to which the gene table corresponds.
-    model_ref :
+    tnseq_model_name :
         ui-name : |
-            Model Used
+            TnSeq Model Name
         short-hint : |
             If uploading a Pool File, give the Pool File's Related Model
         long-hint : |

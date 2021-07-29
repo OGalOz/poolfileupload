@@ -33,52 +33,14 @@
             }
         },
         {
-            "id": "model_ref",
+            "id": "tnseq_model_name",
             "optional": true,
             "advanced": true,
             "allow_multiple": false,
             "default_values": [""],
-            "field_type": "text",
-            "text_options": {
-                "valid_ws_types": ["KBaseRBTnSeq.RBTS_TransposonModel"]
-            }
-        },
-        {
-            "id": "experiments_ref",
-            "optional": true,
-            "advanced": true,
-            "allow_multiple": false,
-            "default_values": [""],
-            "field_type": "text",
-            "text_options": {
-                "valid_ws_types": ["KBaseRBTnSeq.RBTS_ExperimentsTable"]
-            }
-        },
-
-        {
-            "id": "organism_scientific_name",
-            "optional": true,
-            "advanced": true,
-            "allow_multiple": false,
-            "default_values": [""],
-            "field_type": "text"
-        },
-        {
-            "id": "standard_model_name",
-            "optional": true,
-            "advanced": true,
-            "allow_multiple": false,
-            "default_values": [""],
-            "field_type": "dropdown",
-            "dropdown_options": {
-                "options": [{
-                    "value": "Custom",
-                    "display": "Custom - (Advanced)"
-                },
-                {
-                    "value": "Unknown",
-                    "display": "Unknown - (Find)"
-                },
+            "field_type" : "dropdown",
+            "dropdown_options":{
+                "options": [
                 {
                     "value": "Sc_Tn5",
                     "display": "Sc_Tn5"
@@ -128,19 +90,20 @@
                     "display": "pKMW7_U"
                 }]
             }
-
         },
-
         {
-            "id": "model_str",
+            "id": "experiments_ref",
             "optional": true,
             "advanced": true,
             "allow_multiple": false,
             "default_values": [""],
-            "field_type": "text"
+            "field_type": "text",
+            "text_options": {
+                "valid_ws_types": ["KBaseRBTnSeq.RBTS_ExperimentsTable"]
+            }
         },
         {
-            "id": "past_end_str",
+            "id": "organism_scientific_name",
             "optional": true,
             "advanced": true,
             "allow_multiple": false,
@@ -268,27 +231,13 @@
                     "target_property": "organism_scientific_name"
                 },
                 {
-                    "input_parameter": "model_ref",
-                    "target_property": "model_ref",
-                    "target_type_transform": "resolved-ref"
+                    "input_parameter": "tnseq_model_name",
+                    "target_property": "tnseq_model_name"
                 },
                 {
                     "input_parameter": "experiments_ref",
                     "target_property": "experiments_ref",
                     "target_type_transform": "resolved-ref"
-                },
-
-                {
-                    "input_parameter": "standard_model_name",
-                    "target_property": "standard_model_name"
-                },
-                {
-                    "input_parameter": "model_str",
-                    "target_property": "model_str"
-                },
-                {
-                    "input_parameter": "past_end_str",
-                    "target_property": "past_end_str"
                 },
                 {
                     "input_parameter": "RBTS_file_type",
