@@ -113,9 +113,9 @@ class poolcountfileuploadUtil:
                 "utc_created": str(date_time),
                 "set_name": crnt_pc_op_name, 
                 "num_lines": str(num_lines),
-                "related_genes_table_ref": self.params["genes_table_ref"],
+                "related_genome_ref": self.params["genome_ref"],
                 "related_organism_scientific_name": self.get_genome_organism_name(
-                    self.params["genes_table_ref"]
+                    self.params["genome_ref"]
                 ),
                 "description": "Manual Upload: " + self.params["description"],
             }
@@ -182,7 +182,7 @@ class poolcountfileuploadUtil:
         for p in [
             "username",
             "staging_file_names",
-            "genes_table_ref",
+            "genome_ref",
             "description",
             "output_names",
             "ws_obj",
@@ -191,8 +191,22 @@ class poolcountfileuploadUtil:
             if p not in self.params:
                 raise ValueError('"{}" parameter is required, but missing'.format(p))
 
-
-    def get_genome_organism_name(self, gene_table_ref):
+    def get_genome_organism_name(self, genome_ref):
+        # Getting the organism name using WorkspaceClient
+        ws = self.params['ws_obj'] 
+        res = ws.get_objects2(
+            {
+                "objects": [
+                    {
+                        "ref": genome_ref,
+                        "included": ["scientific_name"],
+                    }
+                ]
+            }
+        )
+        scientific_name = res["data"][0]["data"]["scientific_name"]
+        return scientific_name
+    def get_genome_organism_name_from_genes_table(self, gene_table_ref):
         # Getting the organism name using WorkspaceClient
         ws = self.params['ws_obj'] 
         res = ws.get_objects2(

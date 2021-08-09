@@ -54,7 +54,7 @@ class poolfileupload:
         :param params: instance of mapping from String to unspecified object
             'workspace_name' (str):, 
             'workspace_id' (int): e.g. 62550, 
-            'genes_table_ref' (str): '62550/2/1', 
+            'genome_ref' (str): 'A/B/C'
             'pool_file_type' (str): 'genes_table' or 'poolfile' or 'poolcount' or 'experiments' or 'model'
             'description' (str): Free string 
             'sep_type': 'TSV' or 'CSV'
@@ -89,8 +89,8 @@ class poolfileupload:
         else:
             pft = params['RBTS_file_type']
             if pft in ['experiments', 'poolfile', 'poolcount', 'fitness_matrix', 'model']:
-                if params['genes_table_ref'] == "":
-                    raise Exception(f"When uploading {pft} files you must reference a genes table object.")
+                if params['genome_ref'] == "":
+                    raise Exception(f"When uploading {pft} files you must reference a genome object.")
                 if "organism_scientific_name" in params and params["organism_scientific_name"] != "" and \
                         params["organism_scientific_name"] is not None and \
                         params["organism_scientific_name"] != "None":

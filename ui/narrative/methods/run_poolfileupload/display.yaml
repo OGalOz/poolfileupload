@@ -44,9 +44,9 @@ parameters :
         ui-name : |
             Related Genome Object
         short-hint : |
-            If uploading a gene table, to which genome object does it relate? 
+            To which genome object does this data relate?
         long-hint : |
-            The Genome object to which the gene table corresponds.
+            The Genome object to which the new object corresponds.
     tnseq_model_name :
         ui-name : |
             TnSeq Model Name
@@ -122,5 +122,5 @@ parameters :
             This is the name of your pool file that will appear in the data column.
 
 description : |
-    <h1>Upload A pool file to be used in RBTnSeq programs or others.</h1>
+    <h1>Upload A file to be used in RBTnSeq programs.</h1>
 
