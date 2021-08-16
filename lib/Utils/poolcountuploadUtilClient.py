@@ -113,7 +113,7 @@ class poolcountfileuploadUtil:
                 "utc_created": str(date_time),
                 "set_name": crnt_pc_op_name, 
                 "num_lines": str(num_lines),
-                "protocol_type": self.params["protocol_type"],
+                "protocol_used": self.params["protocol_type"],
                 "related_genome_ref": self.params["genome_ref"],
                 "related_organism_scientific_name": self.get_genome_organism_name(
                     self.params["genome_ref"]
