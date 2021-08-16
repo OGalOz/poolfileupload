@@ -110,6 +110,7 @@
             "default_values": [""],
             "field_type": "text"
         },
+
         {
             "id": "genome_ref",
             "optional": true,
@@ -187,6 +188,34 @@
                     "display": "CSV"
                 }
                 ]
+            }
+        },
+        {
+        "id": "protocol_type",
+        "optional": true,
+        "advanced": true,
+        "allow_multiple": false,
+        "default_values": [""],
+        "field_type": "dropdown",
+        "dropdown_options":{
+                "options": [
+                {
+                    "value": "bs3",
+                    "display": "bs3"
+                },
+                {
+                    "value": "n25",
+                    "display": "n25 (bs2)"
+                },
+                {
+                    "value": "dntag",
+                    "display": "dntag"
+                },
+                {
+                    "value": "base",
+                    "display": "base"
+                }
+               ]
             }
         },
         {

@@ -102,6 +102,9 @@ class poolfileupload:
                     pf_util = poolfileuploadUtil(params)
                     result = pf_util.upload_poolfile()
                 elif pft == 'poolcount':
+                    if "protocol_type" not in params or params["protocol_type"] == "":
+                        raise Exception("If uploading a poolcount file, upload "
+                                        "protocol type as well (under Advanced).")
                     pcf_util = poolcountfileuploadUtil(params)
                     result = pcf_util.upload_poolcountfile()
                 elif pft == 'experiments':

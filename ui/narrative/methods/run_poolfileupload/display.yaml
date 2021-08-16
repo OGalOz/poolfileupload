@@ -68,20 +68,6 @@ parameters :
             If uploading a Model, Label its standard name or "Custom" if it isn't part of existing options. 
         long-hint : |
             If uploading a Model, Label its standard name or "Custom" if it isn't part of existing options. 
-    model_str :
-        ui-name : |
-            Model Sequence
-        short-hint : |
-            If uploading a Model, paste its sequence here, e.g. "nnnACTNNNGCT" 
-        long-hint : |
-            If uploading a Model, paste its sequence here, e.g. "nnnACTNNNGCT" 
-    past_end_str :
-        ui-name : |
-            Past End Sequence
-        short-hint : |
-            If uploading a Model, paste its past-end sequence here, e.g. "ACTGCTGGG" 
-        long-hint : |
-            If uploading a Model, paste its past-end sequence here, e.g. "ACTGCTGGG" 
     organism_scientific_name :
         ui-name : |
             Organism Name
@@ -102,9 +88,16 @@ parameters :
         ui-name : |
             Description
         short-hint : |
-            An unconstrained description of the pool file and project.
+            A description of the file and project.
         long-hint : |
-            Please give a light description of the pool file and project.
+            Please give a light description of the file and project.
+    protocol_type :
+        ui-name : |
+            PoolCount Protocol
+        short-hint : |
+            The indexing protocol used for the barcodes
+        long-hint : |
+            The indexing protocol used for the barcodes
     sep_type :
         ui-name : |
             Table Type 

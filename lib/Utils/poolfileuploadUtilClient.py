@@ -201,6 +201,7 @@ class poolfileuploadUtil:
             if x not in pool_df.columns:
                 raise Exception(f"Required column name {x} not found in pool file.")
 
+        past_end_rows = []
         # Checking for duplicates
         barcodes_dict = {}
         for barcode in pool_df["barcode"]:
@@ -213,19 +214,22 @@ class poolfileuploadUtil:
                 if pool_df["scaffold"].iloc[ix] != "pastEnd":
                     raise Exception(f"Incorrect strand value: {strand} at row {ix}")
                 else:
-                    logging.info(f"Found pastEnd hit at row {ix}")
+                    past_end_rows.append(ix)
+        logging.info("Found pastEnd hit at rows: " + ", ".join([str(x) for x in past_end_rows]))
 
 
         for ix, pos in pool_df["pos"].iteritems():
-            if pos < 0:
-                raise Exception("Positions must be positive."
-                                f" Value at row {ix} is {pos}")
-
-        if "pos2" in pool_df.columns:
-            for ix, pos in pool_df["pos2"].iteritems():
+            if not pd.isna(pos):
                 if pos < 0:
                     raise Exception("Positions must be positive."
                                     f" Value at row {ix} is {pos}")
+
+        if "pos2" in pool_df.columns:
+            for ix, pos in pool_df["pos2"].iteritems():
+                if not pd.isna(pos):
+                    if pos < 0:
+                        raise Exception("Positions must be positive."
+                                        f" Value at row {ix} is {pos}")
 
 
         logging.info("Poolfile columns are: " + ", ".join(pool_df.columns))
