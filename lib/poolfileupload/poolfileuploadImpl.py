@@ -8,7 +8,7 @@ from Utils.barcodecountuploadUtilClient import barcodecountfileuploadUtil
 from Utils.genetableuploadUtilClient import genetableuploadUtil
 from Utils.fitnessmatrixuploadUtilClient import fitnessmatrixuploadUtil  
 from Utils.modeluploadUtilClient import modeluploadUtil 
-from Utils.funcs import check_output_name
+#from Utils.funcs import check_output_name
 from installed_clients.KBaseReportClient import KBaseReport
 from installed_clients.WorkspaceClient import Workspace
 from installed_clients.rbts_genome_to_genetableClient import rbts_genome_to_genetable
