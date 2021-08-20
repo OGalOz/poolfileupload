@@ -122,7 +122,7 @@ class poolfileupload:
                                         " upload the strain fitness scores file."
                                         " The fitness score TSV file should be  "
                                         " the first one, the t-score should be  "
-                                        " the second, and the strain fitness 3rd. "
+                                        " the second, and the strain fitness 3rd. ")
                     elif num_stage > 3:
                         raise Exception("Cannot take more than 3 files for "
                                         "this data type: Gene Fitness, T Scores"
