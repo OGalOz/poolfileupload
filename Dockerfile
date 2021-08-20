@@ -16,7 +16,7 @@ RUN aptitude update -y && aptitude safe-upgrade -y && \
     apt-get install --yes \
     build-essential 
 
-RUN apt-get install --yes apt-utils \
+RUN apt-get install --yes apt-utils
 
 RUN apt-get install --yes r-base
 RUN apt-get install python3
