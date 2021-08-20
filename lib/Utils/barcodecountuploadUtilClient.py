@@ -7,7 +7,7 @@ from installed_clients.DataFileUtilClient import DataFileUtil
 from installed_clients.WorkspaceClient import Workspace
 
 
-class poolcountfileuploadUtil:
+class barcodecountfileuploadUtil:
     def __init__(self, params):
         self.params = params
         self.callback_url = os.environ["SDK_CALLBACK_URL"]
@@ -18,18 +18,18 @@ class poolcountfileuploadUtil:
         self.shared_folder = params["shared_folder"]
         self.scratch_folder = os.path.join(params["shared_folder"], "scratch")
 
-    def upload_poolcountfile(self):
+    def upload_barcodecountfile(self):
 
         """
         The upload method
 
         We perform a number of steps:
-        Get name of poolcount file as it is in staging.
-        Find the poolcount file in /staging/poolcount_name
-        Get the output name for the poolcount file
-        Get the column headers for the pool count file for
+        Get name of barcodecount file as it is in staging.
+        Find the barcodecount file in /staging/barcodecount_name
+        Get the output name for the barcodecount file
+        Get the column headers for the barcode count file for
             data and testing purposes. 
-        Test if poolcount file is well-formed.
+        Test if barcodecount file is well-formed.
         NOTE: We use output_name as set_name - it is important that
             these are equivalent!!!!!
         We send the file to shock using dfu.
@@ -46,15 +46,15 @@ class poolcountfileuploadUtil:
 
         # Name of files in staging (Not path):
         staging_fp_names = self.params["staging_file_names"]
-        # Output name of poolcount file:
-        poolcount_names = self.params["output_names"]
+        # Output name of barcodecount file:
+        barcodecount_names = self.params["output_names"]
 
-        if len(staging_fp_names) != len(poolcount_names):
-            raise Exception("The number of poolcount staging files "
+        if len(staging_fp_names) != len(barcodecount_names):
+            raise Exception("The number of barcodecount staging files "
                             "must be equal to the number of output names, "
                             "as the two correspond to each other. "
-                            f"Number of poolcount staging files: {len(staging_fp_names)}."
-                            f" Number of output names: {len(poolcount_names)}.")
+                            f"Number of barcodecount staging files: {len(staging_fp_names)}."
+                            f" Number of output names: {len(barcodecount_names)}.")
 
 
         if not os.path.exists(self.staging_folder):
@@ -65,27 +65,27 @@ class poolcountfileuploadUtil:
         op_info_list = []
 
         for i in range(len(staging_fp_names)):
-            staging_fp_name, crnt_pc_op_name = staging_fp_names[i], poolcount_names[i]
-            # This is the path to the pool file in staging
-            poolcount_fp = os.path.join(self.staging_folder, staging_fp_name)
-            # We check correctness of pool file in staging
-            column_header_list, num_lines, pc_df = self.check_poolcount_file(poolcount_fp, 
+            staging_fp_name, crnt_bc_op_name = staging_fp_names[i], barcodecount_names[i]
+            # This is the path to the barcodecount file in staging
+            barcodecount_fp = os.path.join(self.staging_folder, staging_fp_name)
+            # We check correctness of barcodecount file in staging
+            column_header_list, num_lines, bc_df = self.check_barcodecount_file(barcodecount_fp, 
                                                                       self.params["sep_type"])
 
             # We copy the file from staging to scratch
-            new_pc_fp = os.path.join(self.shared_folder, crnt_pc_op_name)
+            new_bc_fp = os.path.join(self.shared_folder, crnt_bc_op_name)
 
             if self.params["sep_type"] == "TSV":
-                shutil.copyfile(poolcount_fp, new_pc_fp)
+                shutil.copyfile(barcodecount_fp, new_bc_fp)
             else:
-                pc_df.to_csv(new_pc_fp, sep="\t", index=False)
-            #poolcount_scratch_fp is location of pool file in scratch
-            poolcount_scratch_fp = new_pc_fp
+                bc_df.to_csv(new_bc_fp, sep="\t", index=False)
+            #barcodecount_scratch_fp is location of barcodecount file in scratch
+            barcodecount_scratch_fp = new_bc_fp
 
 
             # We create the KBase handle for the object:
             file_to_shock_result = self.dfu.file_to_shock(
-                {"file_path": poolcount_scratch_fp, "make_handle": True, "pack": "gzip"}
+                {"file_path": barcodecount_scratch_fp, "make_handle": True, "pack": "gzip"}
             )
             # The following var res_handle only created for simplification of code
             res_handle = file_to_shock_result["handle"]
@@ -97,9 +97,9 @@ class poolcountfileuploadUtil:
             fastq_refs = []
 
             # We create the data for the object
-            poolcount_data = {
-                "file_type": "KBaseRBTnSeq.RBTS_MutantPoolCount",
-                "poolcount": res_handle["hid"],
+            barcodecount_data = {
+                "file_type": "KBaseRBTnSeq.RBTS_BarcodeCount",
+                "barcodecount": res_handle["hid"],
                 # below should be shock
                 "handle_type": res_handle["type"],
                 "shock_url": res_handle["url"],
@@ -111,7 +111,7 @@ class poolcountfileuploadUtil:
                 "fastqs_used_str": "NA",
                 "file_name": res_handle["file_name"],
                 "utc_created": str(date_time),
-                "set_name": crnt_pc_op_name, 
+                "set_name": crnt_bc_op_name, 
                 "num_lines": str(num_lines),
                 "protocol_used": self.params["protocol_type"],
                 "related_genome_ref": self.params["genome_ref"],
@@ -127,9 +127,9 @@ class poolcountfileuploadUtil:
                 "id": ws_id,
                 "objects": [
                     {
-                        "type": "KBaseRBTnSeq.RBTS_MutantPoolCount",
-                        "data": poolcount_data,
-                        "name": crnt_pc_op_name,
+                        "type": "KBaseRBTnSeq.RBTS_BarcodeCount",
+                        "data": barcodecount_data,
+                        "name": crnt_bc_op_name,
                     }
                 ],
             }
@@ -147,9 +147,9 @@ class poolcountfileuploadUtil:
         return op_info_list
     
 
-    def check_poolcount_file(self, poolcount_fp, sep):
+    def check_barcodecount_file(self, barcodecount_fp, sep):
         """
-        We check the pool file by initializing into dict format
+        We check the barcodecount file by initializing into dict format
    
         Currently a weak test- should add more testing capabilities.
         """
@@ -158,25 +158,25 @@ class poolcountfileuploadUtil:
 
         sep = "\t" if sep == "TSV" else ","
 
-        poolcount_df = pd.read_table(poolcount_fp, sep=sep)
+        barcodecount_df = pd.read_table(barcodecount_fp, sep=sep)
 
         for field in exp_f:
-            if field not in poolcount_df.columns:
-                raise Exception(f"Expected field {field} in poolcount but didn't get it."
-                                " Current fields: " + ", ".join(poolcount_df.columns))
+            if field not in barcodecount_df.columns:
+                raise Exception(f"Expected field {field} in barcodecount but didn't get it."
+                                " Current fields: " + ", ".join(barcodecount_df.columns))
         
-        for ix, val in poolcount_df["strand"].iteritems():
+        for ix, val in barcodecount_df["strand"].iteritems():
             if val not in ["+", "-"]:
-                raise Exception("The strand column of poolcount must be one of '+' or '-',"
+                raise Exception("The strand column of barcodecount must be one of '+' or '-',"
                                 f" current value at row number {ix + 1} is {val}.")
 
-        for ix, val in poolcount_df["pos"].iteritems():
+        for ix, val in barcodecount_df["pos"].iteritems():
             if not isinstance(val, int):
-                raise Exception("The 'pos' column of poolcount must be an integer,"
+                raise Exception("The 'pos' column of barcodecount must be an integer,"
                                 f" current value at row number {ix + 1} is {val}.")
 
     
-        return [list(poolcount_df.columns), poolcount_df.shape[0], poolcount_df]
+        return [list(barcodecount_df.columns), barcodecount_df.shape[0], barcodecount_df]
 
     def validate_import_file_from_staging_params(self):
         # check for required parameters

@@ -5,10 +5,10 @@ import shutil
 import datetime
 import pandas as pd
 from installed_clients.DataFileUtilClient import DataFileUtil
-from installed_clients.WorkspaceClient import Workspace
+from Utils.funcs import catch_NaN
 
 
-class poolfileuploadUtil:
+class mutantpooluploadUtil:
     def __init__(self, params):
         self.params = params
         self.callback_url = os.environ["SDK_CALLBACK_URL"]
@@ -19,17 +19,17 @@ class poolfileuploadUtil:
         self.shared_folder = params["shared_folder"]
         self.scratch_folder = os.path.join(params["shared_folder"], "scratch")
 
-    def upload_poolfile(self):
+    def upload_mutantpool(self):
         """
         The upload method
 
         We perform a number of steps:
-        Get name of poolfile as it is in staging.
-        Find the poolfile in /staging/poolfile_name
-        Get the output name for the poolfile
-        Get the column headers for the pool file for
+        Get name of mutantpool as it is in staging.
+        Find the mutantpool in /staging/mutantpool_name
+        Get the output name for the mutantpool
+        Get the column headers for the mutant pool for
             data and testing purposes. Should be len 12.
-        Test if poolfile is well-formed.
+        Test if mutantpool is well-formed.
         We send the file to shock using dfu.
         We get the handle and save the object with all
             the necessary information- including related genome.
@@ -38,15 +38,16 @@ class poolfileuploadUtil:
             staging_file_names,
             ws_obj,
             workspace_id,
+            gt_obj (genetable object)
 
         """
         print("params: ", self.params)
-        self.validate_import_poolfile_from_staging_params()
+        self.validate_import_mutantpool_from_staging_params()
 
         # Name of file in staging:
         stg_fs = self.params["staging_file_names"]
         if len(stg_fs) != 1:
-            raise Exception("Expecting a single pool file, got a different number"
+            raise Exception("Expecting a single mutant pool, got a different number"
                             f" of staging files: {len(stg_fs)}. Files: " + \
                             ", ".join(sgf_fs))
         else:
@@ -58,21 +59,21 @@ class poolfileuploadUtil:
                             f": {len(op_nms)}. Output Names: " + \
                             ", ".join(op_nms))
         else:
-            poolfile_name = op_nms[0]
+            mutantpool_name = op_nms[0]
 
 
-        print("poolfile_name: ", poolfile_name)
+        print("mutantpool_name: ", mutantpool_name)
         print("top dir /:", os.listdir("/"))
         print("/kb/module/:", os.listdir("/kb/module"))
         if not os.path.exists(self.staging_folder):
             raise Exception("Staging dir does not exist yet! Error will be thrown")
         else:
             print("Succesfully recognized staging directory")
-        # This is the path to the pool file
-        poolfile_fp = os.path.join(self.staging_folder, staging_pool_fp_name)
+        # This is the path to the mutant pool
+        mutantpool_fp = os.path.join(self.staging_folder, staging_pool_fp_name)
 
-        # CHECK POOL FILE:
-        column_header_list, num_lines, pool_df = self.check_pool_file(poolfile_fp,
+        # CHECK mutant pool:
+        column_header_list, num_lines, pool_df = self.check_mutant_pool(mutantpool_fp,
                                                              self.params["sep_type"])
 
         if len(column_header_list) != 12:
@@ -82,17 +83,34 @@ class poolfileuploadUtil:
                 )
             )
         # We copy the file from staging to scratch
-        new_pool_fp = os.path.join(self.shared_folder, poolfile_name)
+        new_pool_fp = os.path.join(self.shared_folder, mutantpool_name)
+
+        try:
+            genes_table_fp = self.get_genes_table_from_genome_ref(self.params["genome_ref"])
+            Stats_op_fp = os.path.join(self.shared_folder, "PoolStatsOutput.txt")
+            PoolStats_R_fp = '/kb/module/lib/Utils/PoolStats.R'
+            self.run_poolstats_r(Stats_op_fp,
+                               PoolStats_R_fp,
+                               genes_table_fp,
+                               mutantpool_fp,
+                               num_lines,
+                               self.shared_folder)
+
+            gene_hit_frac = self.get_gene_hit_rate(Stats_op_fp)
+        except Exception:
+            gene_hit_frac = "NaN"
+
+
 
         if self.params["sep_type"] == "TSV":
-            shutil.copyfile(poolfile_fp, new_pool_fp)
+            shutil.copyfile(mutantpool_fp, new_pool_fp)
         else:
             pool_df.to_csv(new_pool_fp, sep="\t", index=False)
 
-        poolfile_fp = new_pool_fp
+        mutantpool_fp = new_pool_fp
         # We create the handle for the object:
         file_to_shock_result = self.dfu.file_to_shock(
-            {"file_path": poolfile_fp, "make_handle": True, "pack": "gzip"}
+            {"file_path": mutantpool_fp, "make_handle": True, "pack": "gzip"}
         )
         # The following var res_handle only created for simplification of code
         res_handle = file_to_shock_result["handle"]
@@ -103,10 +121,15 @@ class poolfileuploadUtil:
         #        self.params['username'], str(date_time))
         fastq_refs = []
 
+
+
+
+
+
         # We create the data for the object
         pool_data = {
-            "file_type": "KBaseRBTnSeq.RBTS_MutantPoolFile",
-            "poolfile": res_handle["hid"],
+            "file_type": "KBaseRBTnSeq.RBTS_MutantPool",
+            "mutantpool": res_handle["hid"],
             # below should be shock
             "handle_type": res_handle["type"],
             "shock_url": res_handle["url"],
@@ -115,6 +138,7 @@ class poolfileuploadUtil:
             "column_header_list": column_header_list,
             "column_headers_str": ", ".join(column_header_list),
             "num_lines": str(num_lines),
+            "gene_hit_frac": str(round(gene_hit_frac, 4)) 
             "fastqs_used": fastq_refs,
             "fastqs_used_str": "NA",
             "file_name": res_handle["file_name"],
@@ -135,7 +159,7 @@ class poolfileuploadUtil:
                 {
                     "type": "KBaseRBTnSeq.RBTS_MutantPoolFile",
                     "data": pool_data,
-                    "name": poolfile_name,
+                    "name": mutantpool_name,
                 }
             ],
         }
@@ -149,7 +173,7 @@ class poolfileuploadUtil:
             "Date": dfu_object_info[3],
         }
 
-    def validate_import_poolfile_from_staging_params(self):
+    def validate_import_mutantpool_from_staging_params(self):
         prms = self.params
         # check for required parameters
         for p in [
@@ -164,11 +188,11 @@ class poolfileuploadUtil:
 
         if "tnseq_model_name" not in prms or prms["tnseq_model_name"] == "" \
             or prms["tnseq_model_name"] is None:
-            raise Exception("When uploading a poolfile, you must include a model name.")
+            raise Exception("When uploading a mutant pool, you must include a model name.")
 
-    def check_pool_file(self, poolfile_fp, separator):
+    def check_mutant_pool(self, mutantpool_fp, separator):
         """
-        We check the pool file by initializing into dict format
+        We check the mutant pool by initializing into dict format
 
         """
 
@@ -192,14 +216,14 @@ class poolfileuploadUtil:
         }
         """
 
-        pool_df = pd.read_table(poolfile_fp, sep=sep)
+        pool_df = pd.read_table(mutantpool_fp, sep=sep)
 
         req_cols = ["barcode", "rcbarcode", "scaffold", 
                     "pos", "strand"] 
 
         for x in req_cols:
             if x not in pool_df.columns:
-                raise Exception(f"Required column name {x} not found in pool file.")
+                raise Exception(f"Required column name {x} not found in mutant pool.")
 
         past_end_rows = []
         # Checking for duplicates
@@ -232,7 +256,7 @@ class poolfileuploadUtil:
                                         f" Value at row {ix} is {pos}")
 
 
-        logging.info("Poolfile columns are: " + ", ".join(pool_df.columns))
+        logging.info("Mutant Pool columns are: " + ", ".join(pool_df.columns))
 
         return [list(pool_df.columns), pool_df.shape[0], pool_df]
 
@@ -267,3 +291,123 @@ class poolfileuploadUtil:
         )
         scientific_name = res["data"][0]["data"]["related_organism_scientific_name"]
         return scientific_name
+
+    
+    def run_poolstats_r(self, 
+                      Stats_op_fp,
+                      PoolStats_R_fp,
+                      genes_table_fp,
+                      pool_fp,
+                      nMapped,
+                      tmp_dir):
+        """
+        Description:
+            We run an R script to get statistics regarding pool
+            Writes to Stats_op_fp, that's the important file.
+        Args:
+            Stats_op_fp: (str) Path to R log
+            PoolStats_R_fp (str) Path to R script 'PoolStats.R'
+            pool_fp (str) (pool_fp) finished pool file
+            genes_table_fp (str) genes table file path
+            nMapped (int) 
+            tmp_dir: (str) Path to tmp_dir
+        Returns:
+            None
+        """
+
+        R_executable = "Rscript"
+
+        RCmds = [R_executable, 
+                PoolStats_R_fp, 
+                pool_fp,
+                genes_table_fp,
+                nMapped]
+
+
+        logging.info("Running R PoolStats")
+
+        std_op = os.path.join(tmp_dir, "R_STD_OP.txt")
+        with open(Stats_op_fp, "w") as f:
+            with open(std_op, "w") as g:
+                subprocess.call(RCmds, stderr=f, stdout=g)
+
+        if os.path.exists(Stats_op_fp):
+            logging.info("Succesfully ran R, log found at " + Stats_op_fp)
+
+        return None
+
+    def get_gene_hit_rate(self, R_log_fp):
+        """
+        Inputs:
+            R_log_fp: (str)
+        Outputs:
+            gene_hit_frac (float): Fraction of non-essential genes hit
+        Description:
+            We take the Standard Error output of PoolStats.R and parse it
+            in a crude manner in order to get fraction of non-essential genes
+            hit.
+        """
+        with open(R_log_fp, "r") as f:
+            rlog_str = f.read()
+    
+        res_d = {"failed": False}
+    
+        rlog_l = rlog_str.split("\n")
+    
+        if rlog_str == '':
+            res_d["failed"] = True
+            res_d['Error_str'] = 'PoolStats failed to create any results at ' + R_log_fp
+    
+            return res_d
+        elif len(rlog_l) < 11:
+            res_d["failed"] = True
+            res_d["Error_str"] = 'PoolStats output does not have 11 lines as expected:\n"' + rlog_str
+            return res_d
+    
+        
+        logging.debug(rlog_l)
+    
+        gene_hit_frac =  catch_NaN(rlog_l[3].split(' ')[8])
+        #res_d['insertions'] = catch_NaN(rlog_l[0].split(' ')[0])
+        #res_d['diff_loc'] = catch_NaN(rlog_l[0].split(' ')[6])
+        #res_d['cntrl_ins'] = catch_NaN(rlog_l[1].split(' ')[1])
+        #res_d['cntrl_distinct'] = catch_NaN(rlog_l[1].split(' ')[3][1:])
+        #res_d['nPrtn_cntrl'] = catch_NaN(rlog_l[2].split(' ')[4])
+        #res_d["essential_hit_rate"] = catch_NaN(rlog_l[3].split(' ')[6])
+        #res_d["num_surp"] = catch_NaN(rlog_l[5].split(' ')[1])
+        #res_d['stn_per_prtn_median'] = catch_NaN(rlog_l[7].split(' ')[5])
+        #res_d['stn_per_prtn_mean'] = catch_NaN(rlog_l[7].split(' ')[-1])
+        #res_d['gene_trspsn_same_prcnt'] = catch_NaN(rlog_l[8].split(' ')[-1][:-1])
+        #res_d['reads_per_prtn_median'] = catch_NaN(rlog_l[9].split(' ')[5])
+        #res_d['reads_per_prtn_mean'] = catch_NaN(rlog_l[9].split(' ')[7])
+        #res_d['reads_per_mil_prtn_median'] = catch_NaN(rlog_l[10].split(' ')[-3])
+        #res_d['reads_per_mil_prtn_mean'] = catch_NaN(rlog_l[10].split(' ')[-1])
+    
+        #logging.info("Results from parsing PoolStats.R output:")
+        #logging.info(res_d)
+    
+        return gene_hit_frac 
+
+    def get_genes_table_from_genome_ref(self, genome_ref):
+        """
+        Description:
+            We use the installed client to get the genes table
+            from the genome_ref.
+        Args:
+            self.params:
+                gt_obj gene table object
+            genome_ref (str): ref of genome 'A/B/C'
+        """
+        
+        g2gt_results = self.params['gt_obj'].genome_to_genetable({'genome_ref': genome_ref})
+        logging.info(g2gt_results)
+        # This is where the genes table is downloaded to
+        gene_table_fp = os.path.join(os.path.join(self.shared_folder, 'g2gt_results'), 'genes.GC')
+         
+
+        return gene_table_fp
+        
+
+
+
+

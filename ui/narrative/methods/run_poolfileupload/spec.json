@@ -21,17 +21,7 @@
                 "valid_ws_types": "ftp_staging"
             }
         },
-        {
-            "id": "genes_table_ref",
-            "optional": true,
-            "advanced": false,
-            "allow_multiple": false,
-            "default_values": [""],
-            "field_type": "text",
-            "text_options": {
-                "valid_ws_types": ["KBaseRBTnSeq.RBTS_InputGenesTable"]
-            }
-        },
+        
         {
             "id": "tnseq_model_name",
             "optional": true,
@@ -140,12 +130,12 @@
                     "display": "Experiments"
                 },
                 {
-                    "value": "poolfile",
-                    "display": "Pool File"
+                    "value": "mutantpool",
+                    "display": "Mutant Pool"
                 },
                 {
-                    "value": "poolcount",
-                    "display": "Pool Count"
+                    "value": "barcodecount",
+                    "display": "Barcode Count"
                 },
                 {
                     "value": "fitness_matrix",

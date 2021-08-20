@@ -33,13 +33,6 @@ parameters :
         long-hint  : |
             Pool file should have 4 tab-separated fields -- 
             barcode, rcbarcode, nTot, n, scaffold, strand, pos, n2, scaffold2, strand2, pos2, nPastEnd
-    genes_table_ref :
-        ui-name : |
-            Related Gene Table
-        short-hint : |
-            The Gene Table to which this pool file corresponds
-        long-hint : |
-            The Gene Table to which the pool file corresponds.
     genome_ref :
         ui-name : |
             Related Genome Object
@@ -83,7 +76,7 @@ parameters :
         long-hint : |
             There are four primary types of TSV files transferred between 
             programs in RBTnSeq. You are allowed to upload them as long as they
-            follow a certain format. InputGenesTable, Experiments, Poolfile, PoolCount.
+            follow a certain format. InputGenesTable, Experiments, Mutant Pool, BarcodeCount.
     description :
         ui-name : |
             Description

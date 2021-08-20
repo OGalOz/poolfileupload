@@ -2,15 +2,16 @@
 #BEGIN_HEADER
 import logging
 import os
-from Utils.poolfileuploadUtilClient import poolfileuploadUtil
+from Utils.mutantpooluploadUtilClient import mutantpooluploadUtil
 from Utils.expsfileuploadUtilClient import expsfileuploadUtil
-from Utils.poolcountuploadUtilClient import poolcountfileuploadUtil
+from Utils.barcodecountuploadUtilClient import barcodecountfileuploadUtil
 from Utils.genetableuploadUtilClient import genetableuploadUtil
 from Utils.fitnessmatrixuploadUtilClient import fitnessmatrixuploadUtil  
 from Utils.modeluploadUtilClient import modeluploadUtil 
 from Utils.funcs import check_output_name
 from installed_clients.KBaseReportClient import KBaseReport
 from installed_clients.WorkspaceClient import Workspace
+from installed_clients.rbts_genome_to_genetableClient import rbts_genome_to_genetable
 #END_HEADER
 
 
@@ -55,7 +56,7 @@ class poolfileupload:
             'workspace_name' (str):, 
             'workspace_id' (int): e.g. 62550, 
             'genome_ref' (str): 'A/B/C'
-            'pool_file_type' (str): 'genes_table' or 'poolfile' or 'poolcount' or 'experiments' or 'model'
+            'pool_file_type' (str): 'genes_table' or 'mutantpool' or 'barcodecount' or 'experiments' or 'model'
             'description' (str): Free string 
             'sep_type': 'TSV' or 'CSV'
             'staging_file_names' (list<str>): list<filenames> 
@@ -72,6 +73,8 @@ class poolfileupload:
         ws = Workspace(self.ws_url, token=token)
         params['workspace_id'] =  ws.get_workspace_info({'workspace': params['workspace_name']})[0]
         params['ws_obj'] = ws
+        # genetable object (converts genome to gene table)
+        params['gt_obj'] = rbts_genome_to_genetable(self.callback_url)
         params['username'] = ctx['user_id']
         #params['output_name'] = check_output_name(params['output_name'])
 
@@ -88,7 +91,7 @@ class poolfileupload:
             raise Exception("Did not get param RBTS_file_type")
         else:
             pft = params['RBTS_file_type']
-            if pft in ['experiments', 'poolfile', 'poolcount', 'fitness_matrix', 'model']:
+            if pft in ['experiments', 'mutantpool', 'barcodecount', 'fitness_matrix', 'model']:
                 if params['genome_ref'] == "":
                     raise Exception(f"When uploading {pft} files you must reference a genome object.")
                 if "organism_scientific_name" in params and params["organism_scientific_name"] != "" and \
@@ -98,15 +101,15 @@ class poolfileupload:
                                     "do not provide the organism's name (under Advanced Inputs)."
                                     f" Current name given: '{params['organism_scientific_name']}'."
                                     " This new scientific name will not be used.")
-                if pft == 'poolfile':
-                    pf_util = poolfileuploadUtil(params)
-                    result = pf_util.upload_poolfile()
-                elif pft == 'poolcount':
+                if pft == 'mutantpool':
+                    pf_util = mutantpooluploadUtil(params)
+                    result = pf_util.upload_mutantpool()
+                elif pft == 'barcodecount':
                     if "protocol_type" not in params or params["protocol_type"] == "":
-                        raise Exception("If uploading a poolcount file, upload "
+                        raise Exception("If uploading a barcodecount file, upload "
                                         "protocol type as well (under Advanced).")
-                    pcf_util = poolcountfileuploadUtil(params)
-                    result = pcf_util.upload_poolcountfile()
+                    pcf_util = barcodecountfileuploadUtil(params)
+                    result = pcf_util.upload_barcodecountfile()
                 elif pft == 'experiments':
                     expsf_util = expsfileuploadUtil(params)
                     result = expsf_util.upload_expsfile()
@@ -141,7 +144,7 @@ class poolfileupload:
                 raise Exception(f"Did not recognize pool_file_type {pft} for upload")
 
         text_message = "Finished uploading file \n"
-        if pft != "poolcount":
+        if pft != "barcodecount":
             text_message += "{} saved as {} on {}\n".format(result['Name'],
                         result['Type'], result['Date'])
         else:
