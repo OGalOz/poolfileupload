@@ -85,6 +85,7 @@ class mutantpooluploadUtil:
         # We copy the file from staging to scratch
         new_pool_fp = os.path.join(self.shared_folder, mutantpool_name)
 
+        logging.info("Creating Genes Table from Genome:")
         genes_table_fp = self.get_genes_table_from_genome_ref(self.params["genome_ref"])
         Stats_op_fp = os.path.join(self.shared_folder, "PoolStatsOutput.txt")
         logging.info(os.listdir('/kb/module'))
