@@ -184,7 +184,7 @@ class poolfileupload:
             report_params = {
                     'workspace_name' : params['workspace_name'],
                     'file_links':[dir_link],
-                    "message": "Returning created or downloaded files."
+                    "message": text_message
                     }
 
             #Returning file in zipped format:------------------------------------------------------------------
