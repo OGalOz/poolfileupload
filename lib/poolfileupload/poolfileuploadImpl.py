@@ -165,9 +165,10 @@ class poolfileupload:
 
 
         # Returning file in zipped format:-------------------------------
+        report_created = False
         if len(os.listdir(res_dir)) > 0:
+            report_created = True
             logging.info("res dir: " + ", ".join(os.listdir(res_dir)))
-            '''
             dfu = DataFileUtil(self.callback_url)
             file_zip_shock_id = dfu.file_to_shock({'file_path': res_dir,
                                                   'pack': 'zip'})['shock_id']
@@ -177,44 +178,25 @@ class poolfileupload:
                    'name':  'results.zip', 
                    'label':'RBTS_UPLOAD_output_dir', 
                    'description': 'The directory of outputs from uploading' \
-                    + ''
-                   }
-            
-            # Preparing HTML output
-            html_dir = os.path.join(cfg_d["tmp_dir"], "HTML")
-            #os.mkdir(html_dir)
-            #shutil.move(cfg_d['css_style_fp'], html_dir)
-            #shutil.move(cfg_d['Main_HTML_report_fp'], html_dir)
-
-            HTML_report_shock_id = cfg_d['dfu'].file_to_shock({
-                    "file_path": html_dir,
-                    "pack": "zip"
-                    })['shock_id']
-
-            HTML_report_d_l = [{"shock_id": HTML_report_shock_id,
-                                "name": os.path.basename(os.path.join(html_dir,"FullDisplay_index.html")),
-                                "label": "MutantReport",
-                                "description": "HTML Summary Report for MapTnSeq and Design Random Pool app"
-                                }]
-
+                    + 'RBTS table.'
+            }
 
             report_params = {
-                    'workspace_name' : cfg_d['workspace_name'],
-                    "html_links": HTML_report_d_l,
-                    "direct_html_link_index": 0,
-                    "html_window_height": 333,
-                    "message": "Finished Running MapTnSeq"
+                    'workspace_name' : params['workspace_name'],
+                    'file_links':[dir_link],
+                    "message": "Returning created or downloaded files."
                     }
 
-            report_params["file_links"] = [dir_link]
-            '''
+            #Returning file in zipped format:------------------------------------------------------------------
+            report_util = KBaseReport(self.callback_url)
+            report_info = report_util.create_extended_report(report_params)
+            # ----------
 
-
-
-        report = KBaseReport(self.callback_url)
-        report_info = report.create({'report': {'objects_created':[],
-                                                'text_message': text_message},
-                                                'workspace_name': params['workspace_name']})
+        if not report_created:
+            report = KBaseReport(self.callback_url)
+            report_info = report.create({'report': {'objects_created':[],
+                                                    'text_message': text_message},
+                                                    'workspace_name': params['workspace_name']})
 
         output = {
             'report_name': report_info['name'],
