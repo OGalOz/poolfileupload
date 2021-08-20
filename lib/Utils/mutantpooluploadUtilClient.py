@@ -170,7 +170,7 @@ class mutantpooluploadUtil:
             "id": ws_id,
             "objects": [
                 {
-                    "type": "KBaseRBTnSeq.RBTS_MutantPoolFile",
+                    "type": "KBaseRBTnSeq.RBTS_MutantPool",
                     "data": pool_data,
                     "name": mutantpool_name,
                 }
