@@ -106,7 +106,7 @@ class mutantpooluploadUtil:
                            PoolStats_R_fp,
                            genes_table_fp,
                            mutantpool_fp,
-                           num_lines,
+                           str(num_lines),
                            self.shared_folder)
 
         gene_hit_frac = self.get_gene_hit_rate(Stats_op_fp)
