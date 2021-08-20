@@ -7,8 +7,11 @@ MAINTAINER KBase Developer
 # installation scripts.
 
 # RUN apt-get update
+RUN apt-get update
+RUN apt-get install --yes r-base
+RUN apt-get install python3
+RUN pip install --upgrade pip 
 RUN pip install pandas
-
 # -----------------------------------------
 
 COPY ./ /kb/module

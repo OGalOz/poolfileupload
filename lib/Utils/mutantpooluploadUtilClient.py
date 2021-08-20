@@ -62,13 +62,13 @@ class mutantpooluploadUtil:
             mutantpool_name = op_nms[0]
 
 
-        print("mutantpool_name: ", mutantpool_name)
-        print("top dir /:", os.listdir("/"))
-        print("/kb/module/:", os.listdir("/kb/module"))
+        logging.info("mutantpool_name: ", mutantpool_name)
+        logging.info("top dir /:", os.listdir("/"))
+        logging.info("/kb/module/:", os.listdir("/kb/module"))
         if not os.path.exists(self.staging_folder):
             raise Exception("Staging dir does not exist yet! Error will be thrown")
         else:
-            print("Succesfully recognized staging directory")
+            logging.info("Succesfully recognized staging directory")
         # This is the path to the mutant pool
         mutantpool_fp = os.path.join(self.staging_folder, staging_pool_fp_name)
 
@@ -85,20 +85,18 @@ class mutantpooluploadUtil:
         # We copy the file from staging to scratch
         new_pool_fp = os.path.join(self.shared_folder, mutantpool_name)
 
-        try:
-            genes_table_fp = self.get_genes_table_from_genome_ref(self.params["genome_ref"])
-            Stats_op_fp = os.path.join(self.shared_folder, "PoolStatsOutput.txt")
-            PoolStats_R_fp = '/kb/module/lib/Utils/PoolStats.R'
-            self.run_poolstats_r(Stats_op_fp,
-                               PoolStats_R_fp,
-                               genes_table_fp,
-                               mutantpool_fp,
-                               num_lines,
-                               self.shared_folder)
+        genes_table_fp = self.get_genes_table_from_genome_ref(self.params["genome_ref"])
+        Stats_op_fp = os.path.join(self.shared_folder, "PoolStatsOutput.txt")
+        PoolStats_R_fp = '/kb/module/lib/Utils/PoolStats.R'
+        self.run_poolstats_r(Stats_op_fp,
+                           PoolStats_R_fp,
+                           genes_table_fp,
+                           mutantpool_fp,
+                           num_lines,
+                           self.shared_folder)
 
-            gene_hit_frac = self.get_gene_hit_rate(Stats_op_fp)
-        except Exception:
-            gene_hit_frac = "NaN"
+        gene_hit_frac = self.get_gene_hit_rate(Stats_op_fp)
+        #gene_hit_frac = "NaN"
 
 
 
