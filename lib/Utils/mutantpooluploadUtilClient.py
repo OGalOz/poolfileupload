@@ -87,7 +87,20 @@ class mutantpooluploadUtil:
 
         genes_table_fp = self.get_genes_table_from_genome_ref(self.params["genome_ref"])
         Stats_op_fp = os.path.join(self.shared_folder, "PoolStatsOutput.txt")
+        logging.info(os.listdir('/kb/module'))
+        is_dir = os.path.isdir('/kb/module/lib') 
+        logging.info(is_dir)
+        if is_dir:
+            logging.info(os.listdir('/kb/module/lib'))
+            logging.info(os.listdir('/kb/module/lib/Utils'))
+        else:
+            raise Exception("lib not a dir!")
+        
         PoolStats_R_fp = '/kb/module/lib/Utils/PoolStats.R'
+        is_file = os.path.isfile(PoolStats_R_fp)
+        if not is_file:
+            raise Exception("PoolStats R file not found!")
+
         self.run_poolstats_r(Stats_op_fp,
                            PoolStats_R_fp,
                            genes_table_fp,
