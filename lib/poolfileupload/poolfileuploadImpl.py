@@ -2,6 +2,7 @@
 #BEGIN_HEADER
 import logging
 import os
+import shutil
 from Utils.mutantpooluploadUtilClient import mutantpooluploadUtil
 from Utils.expsfileuploadUtilClient import expsfileuploadUtil
 from Utils.barcodecountuploadUtilClient import barcodecountfileuploadUtil
@@ -76,6 +77,9 @@ class poolfileupload:
         # genetable object (converts genome to gene table)
         params['gt_obj'] = rbts_genome_to_genetable(self.callback_url)
         params['username'] = ctx['user_id']
+        res_dir = os.path.join(self.shared_folder, "results")
+        os.mkdir(res_dir)
+        params['results_dir'] = res_dir
         #params['output_name'] = check_output_name(params['output_name'])
 
         # Checking basic params
@@ -104,6 +108,8 @@ class poolfileupload:
                 if pft == 'mutantpool':
                     pf_util = mutantpooluploadUtil(params)
                     result = pf_util.upload_mutantpool()
+                    gene_table_fp = result["GenesTable_fp"] 
+                    shutil.move(gene_table_fp, res_dir)
                 elif pft == 'barcodecount':
                     if "protocol_type" not in params or params["protocol_type"] == "":
                         raise Exception("If uploading a barcodecount file, upload "

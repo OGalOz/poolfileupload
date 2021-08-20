@@ -110,7 +110,7 @@ class mutantpooluploadUtil:
                            self.shared_folder)
 
         gene_hit_frac = self.get_gene_hit_rate(Stats_op_fp)
-        if isinstance(gene_hit_frac, float) or isinstance(gene_hit_frac, int):
+        if isinstance(gene_hit_frac, float):
             gene_hit_frac = str(round(gene_hit_frac, 4))
             # otherwise it is string already
 
@@ -151,7 +151,7 @@ class mutantpooluploadUtil:
             "column_header_list": column_header_list,
             "column_headers_str": ", ".join(column_header_list),
             "num_lines": str(num_lines),
-            "gene_hit_frac": str(round(gene_hit_frac, 4)),
+            "gene_hit_frac": gene_hit_frac,
             "fastqs_used": fastq_refs,
             "fastqs_used_str": "NA",
             "file_name": res_handle["file_name"],
@@ -184,6 +184,7 @@ class mutantpooluploadUtil:
             "Name": dfu_object_info[1],
             "Type": dfu_object_info[2],
             "Date": dfu_object_info[3],
+            "GenesTable_fp": genes_table_fp
         }
 
     def validate_import_mutantpool_from_staging_params(self):
@@ -322,7 +323,7 @@ class mutantpooluploadUtil:
             PoolStats_R_fp (str) Path to R script 'PoolStats.R'
             pool_fp (str) (pool_fp) finished pool file
             genes_table_fp (str) genes table file path
-            nMapped (int) 
+            nMapped (str): string of an int
             tmp_dir: (str) Path to tmp_dir
         Returns:
             None
