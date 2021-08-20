@@ -1,8 +1,8 @@
 import os
 import logging
-import re
 import shutil
 import datetime
+import subprocess
 import pandas as pd
 from installed_clients.DataFileUtilClient import DataFileUtil
 from Utils.funcs import catch_NaN
@@ -49,7 +49,7 @@ class mutantpooluploadUtil:
         if len(stg_fs) != 1:
             raise Exception("Expecting a single mutant pool, got a different number"
                             f" of staging files: {len(stg_fs)}. Files: " + \
-                            ", ".join(sgf_fs))
+                            ", ".join(stg_fs))
         else:
             staging_pool_fp_name = stg_fs[0]
 
