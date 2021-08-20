@@ -357,8 +357,13 @@ class DataFileUtil(object):
 
     def save_objects(self, params, context=None):
         """
-        Save objects to the workspace. Saving over a deleted object undeletes
-        it.
+        Save objects to the workspace.
+        The objects will be sorted prior to saving to avoid the Workspace sort memory limit.
+        Note that if the object contains workspace object refs in mapping keys that may cause
+        the Workspace to resort the data. To avoid this, convert any refs in mapping keys to UPA
+        format (e.g. #/#/#, where # is a positive integer). 
+        If the data is very large, using the WSLargeDataIO SDK module is advised.
+        Saving over a deleted object undeletes it.
         :param params: instance of type "SaveObjectsParams" (Input parameters
            for the "save_objects" function. Required parameters: id - the
            numerical ID of the workspace. objects - the objects to save. The
@@ -367,15 +372,12 @@ class DataFileUtil(object):
            type "ObjectSaveData" (An object and associated data required for
            saving. Required parameters: type - the workspace type string for
            the object. Omit the version information to use the latest
-           version. data - the object data. Optional parameters: One of an
-           object name or id. If no name or id is provided the name will be
-           set to 'auto' with the object id appended as a string, possibly
-           with -\d+ appended if that object id already exists as a name.
-           name - the name of the object. objid - the id of the object to
-           save over. meta - arbitrary user-supplied metadata for the object,
-           not to exceed 16kb; if the object type specifies automatic
-           metadata extraction with the 'meta ws' annotation, and your
-           metadata name conflicts, then your metadata will be silently
+           version. data - the object data. One of an object name or id: name
+           - the name of the object. objid - the id of the object to save
+           over. Optional parameters: meta - arbitrary user-supplied metadata
+           for the object, not to exceed 16kb; if the object type specifies
+           automatic metadata extraction with the 'meta ws' annotation, and
+           your metadata name conflicts, then your metadata will be silently
            overwritten. hidden - true if this object should not be listed
            when listing workspace objects. extra_provenance_input_refs -
            (optional) if set, these refs will be appended to the primary
