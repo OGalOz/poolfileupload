@@ -86,7 +86,7 @@ parameters :
             Please give a light description of the file and project.
     protocol_type :
         ui-name : |
-            PoolCount Protocol
+            BarcodeCount Protocol
         short-hint : |
             The indexing protocol used for the barcodes
         long-hint : |

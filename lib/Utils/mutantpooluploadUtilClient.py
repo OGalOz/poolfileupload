@@ -138,7 +138,7 @@ class mutantpooluploadUtil:
             "column_header_list": column_header_list,
             "column_headers_str": ", ".join(column_header_list),
             "num_lines": str(num_lines),
-            "gene_hit_frac": str(round(gene_hit_frac, 4)) 
+            "gene_hit_frac": str(round(gene_hit_frac, 4)),
             "fastqs_used": fastq_refs,
             "fastqs_used_str": "NA",
             "file_name": res_handle["file_name"],
