@@ -110,8 +110,9 @@ class mutantpooluploadUtil:
                            self.shared_folder)
 
         gene_hit_frac = self.get_gene_hit_rate(Stats_op_fp)
-        #gene_hit_frac = "NaN"
-
+        if isinstance(gene_hit_frac, float) or isinstance(gene_hit_frac, int):
+            gene_hit_frac = str(round(gene_hit_frac, 4))
+            # otherwise it is string already
 
 
         if self.params["sep_type"] == "TSV":
@@ -353,7 +354,7 @@ class mutantpooluploadUtil:
         Inputs:
             R_log_fp: (str)
         Outputs:
-            gene_hit_frac (float): Fraction of non-essential genes hit
+            gene_hit_frac (float or str ("NaN")): Fraction of non-essential genes hits
         Description:
             We take the Standard Error output of PoolStats.R and parse it
             in a crude manner in order to get fraction of non-essential genes
@@ -366,18 +367,18 @@ class mutantpooluploadUtil:
     
         rlog_l = rlog_str.split("\n")
     
+        logging.info("Rlog results: \n" + rlog_str)
         if rlog_str == '':
             res_d["failed"] = True
-            res_d['Error_str'] = 'PoolStats failed to create any results at ' + R_log_fp
-    
-            return res_d
+            logging.critical('PoolStats failed to create any results at ' + R_log_fp)
+            return "NaN"
         elif len(rlog_l) < 11:
             res_d["failed"] = True
-            res_d["Error_str"] = 'PoolStats output does not have 11 lines as expected:\n"' + rlog_str
-            return res_d
+
+            logging.critical('PoolStats output does not have 11 lines as expected:\n"' + rlog_str)
+            return "NaN"
     
         
-        logging.debug(rlog_l)
     
         gene_hit_frac =  catch_NaN(rlog_l[3].split(' ')[8])
         #res_d['insertions'] = catch_NaN(rlog_l[0].split(' ')[0])
