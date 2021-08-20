@@ -7,7 +7,17 @@ MAINTAINER KBase Developer
 # installation scripts.
 
 # RUN apt-get update
-RUN apt-get update
+RUN apt-get update && \
+    apt-get install -y aptitude
+
+RUN apt-get clean
+
+RUN aptitude update -y && aptitude safe-upgrade -y && \
+    apt-get install --yes \
+    build-essential 
+
+RUN apt-get install --yes apt-utils \
+
 RUN apt-get install --yes r-base
 RUN apt-get install python3
 RUN pip install --upgrade pip 
