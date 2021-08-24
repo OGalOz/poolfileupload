@@ -467,6 +467,7 @@ class mutantpooluploadUtil:
                                  ", ".join(fna_scf_names))
         
 
+        logging.info("Every scaffold name in mutant pool file found in genome fna.")
 
         return None
 
