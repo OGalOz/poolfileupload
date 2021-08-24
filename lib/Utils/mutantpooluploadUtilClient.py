@@ -6,7 +6,7 @@ import subprocess
 import pandas as pd
 from installed_clients.DataFileUtilClient import DataFileUtil
 from installed_clients.GenomeFileUtilClient import GenomeFileUtil
-from Utils.funcs import catch_NaN, DownloadGenomeToFNA
+from Utils.funcs import catch_NaN, DownloadGenomeToFNA, GetScaffoldLengths
 
 
 class mutantpooluploadUtil:
@@ -455,6 +455,7 @@ class mutantpooluploadUtil:
             Exception.
         """
 
+        logging.info("Comparing scaffold names from mutant pool and genome fna.")
         #Downloading genome fna
         genome_fna_fp = DownloadGenomeToFNA(self.gfu, genome_ref, self.shared_folder)
         # scaffold name to length of scaffold dict
