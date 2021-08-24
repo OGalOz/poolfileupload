@@ -107,6 +107,7 @@ class poolfileupload:
                                     f" Current name given: '{params['organism_scientific_name']}'."
                                     " This new scientific name will not be used.")
                 if pft == 'mutantpool':
+                    # requires genome_ref
                     pf_util = mutantpooluploadUtil(params)
                     result = pf_util.upload_mutantpool()
                     gene_table_fp = result["GenesTable_fp"] 

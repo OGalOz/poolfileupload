@@ -5,7 +5,8 @@ import datetime
 import subprocess
 import pandas as pd
 from installed_clients.DataFileUtilClient import DataFileUtil
-from Utils.funcs import catch_NaN
+from installed_clients.GenomeFileUtilClient import GenomeFileUtil
+from Utils.funcs import catch_NaN, DownloadGenomeToFNA
 
 
 class mutantpooluploadUtil:
@@ -13,6 +14,7 @@ class mutantpooluploadUtil:
         self.params = params
         self.callback_url = os.environ["SDK_CALLBACK_URL"]
         self.dfu = DataFileUtil(self.callback_url)
+        self.gfu = GenomeFileUtil(self.callback_url)
         self.data_folder = os.path.abspath("/kb/module/data/")
         # This is where files from staging area exist
         self.staging_folder = os.path.abspath("/staging/")
@@ -73,7 +75,7 @@ class mutantpooluploadUtil:
         mutantpool_fp = os.path.join(self.staging_folder, staging_pool_fp_name)
 
         # CHECK mutant pool:
-        column_header_list, num_lines, pool_df = self.check_mutant_pool(mutantpool_fp,
+        column_header_list, num_lines, pool_df, scf_names = self.check_mutant_pool(mutantpool_fp,
                                                              self.params["sep_type"])
 
         if len(column_header_list) != 12:
@@ -82,6 +84,9 @@ class mutantpooluploadUtil:
                     len(column_header_list)
                 )
             )
+
+        self.check_scaffold_names_match(scf_names, self.params["genome_ref"])
+
         # We copy the file from staging to scratch
         new_pool_fp = os.path.join(self.shared_folder, mutantpool_name)
 
@@ -208,6 +213,15 @@ class mutantpooluploadUtil:
         """
         We check the mutant pool by initializing into dict format
 
+
+        Returns:
+            [list(pool_df.columns), pool_df.shape[0], pool_df, unique_scaffold_names]
+            which is:
+                column names (str)
+                number of lines
+                the dataframe
+                the scaffold names (list<str>)
+
         """
 
         
@@ -269,10 +283,13 @@ class mutantpooluploadUtil:
                         raise Exception("Positions must be positive."
                                         f" Value at row {ix} is {pos}")
 
+        # Getting all scaffold names:
+        unique_scaffold_names = list(pool_df["scaffold"].unique())
+
 
         logging.info("Mutant Pool columns are: " + ", ".join(pool_df.columns))
 
-        return [list(pool_df.columns), pool_df.shape[0], pool_df]
+        return [list(pool_df.columns), pool_df.shape[0], pool_df, unique_scaffold_names]
 
 
     def get_genome_organism_name(self, genome_ref):
@@ -420,7 +437,39 @@ class mutantpooluploadUtil:
          
 
         return gene_table_fp
+       
+    def check_scaffold_names_match(self, pool_scf_names, genome_ref):
+        """Checks scaffold names from mutant pool are all in genome fna
+   
+        Args:
+            pool_scf_names (list<str>): A list of all scaffold names
+                                    from the mutant pool file.
+        Returns: None
+        Description:
+            Every scaffold in the mutant pool has to be listed in
+            the genome fna, otherwise there is a mismatch of
+            scaffold names.
+            Downloads genome fna, gets all scaffold names,
+            checks every name in scf_names is in the scaffold
+            names of the genome fna, otherwise raises an
+            Exception.
+        """
+
+        #Downloading genome fna
+        genome_fna_fp = DownloadGenomeToFNA(self.gfu, genome_ref, self.shared_folder)
+        # scaffold name to length of scaffold dict
+        scf_to_len_d = GetScaffoldLengths(genome_fna_fp)
+        fna_scf_names = list(scf_to_len_d.keys())
+        for scf in pool_scf_names:
+            if scf not in fna_scf_names:
+                raise Exception(f"Scaffold name {scf} not found in genome fna. Full list "
+                                 "of scaffold names from genome fna: "
+                                 ", ".join(fna_scf_names))
         
+
+
+        return None
+
 
 
 
