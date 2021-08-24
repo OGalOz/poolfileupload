@@ -54,6 +54,13 @@ parameters :
             If uploading a Fitness Matrix, give the related experiments table
         long-hint : |
             If uploading a Fitness Matrix, give the related experiments table
+    mutantpool_ref :
+        ui-name : |
+            Mutant Pool Used
+        short-hint : |
+            If uploading Barcode Counts, give the related mutant pool
+        long-hint : |
+            If uploading Barcode Counts, give the related mutant pool
     standard_model_name :
         ui-name : |
             Standard Model Name 

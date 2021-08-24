@@ -116,6 +116,9 @@ class poolfileupload:
                     if "protocol_type" not in params or params["protocol_type"] == "":
                         raise Exception("If uploading a barcodecount file, upload "
                                         "protocol type as well (under Advanced).")
+                    if "mutantpool_ref" not in params or params["mutantpool_ref"] == "":
+                        raise Exception("If uploading barcodecounts files, upload "
+                                        "related mutant pool as well (under Advanced).")
                     pcf_util = barcodecountfileuploadUtil(params)
                     result = pcf_util.upload_barcodecountfile()
                 elif pft == 'experiments':
