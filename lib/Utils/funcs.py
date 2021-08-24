@@ -3,6 +3,7 @@
 import os
 import sys
 import logging
+import math
 
 def check_output_name(output_name):
     #output_name is string
