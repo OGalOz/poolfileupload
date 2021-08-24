@@ -463,8 +463,8 @@ class mutantpooluploadUtil:
         fna_scf_names = list(scf_to_len_d.keys())
         for scf in pool_scf_names:
             if scf not in fna_scf_names:
-                raise Exception(f"Scaffold name {scf} not found in genome fna. Full list "
-                                 "of scaffold names from genome fna: "
+                raise Exception(f"Scaffold name {scf} not found in genome fna. Full list " + \
+                                 "of scaffold names from genome fna: " + \
                                  ", ".join(fna_scf_names))
         
 
