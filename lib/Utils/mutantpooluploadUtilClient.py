@@ -7,6 +7,7 @@ import pandas as pd
 from installed_clients.DataFileUtilClient import DataFileUtil
 from installed_clients.GenomeFileUtilClient import GenomeFileUtil
 from Utils.funcs import catch_NaN, DownloadGenomeToFNA, GetScaffoldLengths
+from Utils.PoolStats import RunPoolStatsPy
 
 
 class mutantpooluploadUtil:
@@ -107,14 +108,12 @@ class mutantpooluploadUtil:
         if not is_file:
             raise Exception("PoolStats R file not found!")
 
-        self.run_poolstats_r(Stats_op_fp,
-                           PoolStats_R_fp,
-                           genes_table_fp,
+        gene_hit_frac = self.run_poolstats_py(genes_table_fp,
                            mutantpool_fp,
-                           str(num_lines),
+                           num_lines,
                            self.shared_folder)
 
-        gene_hit_frac = self.get_gene_hit_rate(Stats_op_fp)
+        #gene_hit_frac = self.get_gene_hit_rate(Stats_op_fp)
         if isinstance(gene_hit_frac, float):
             gene_hit_frac = str(round(gene_hit_frac, 4))
             # otherwise it is string already
@@ -323,7 +322,19 @@ class mutantpooluploadUtil:
         scientific_name = res["data"][0]["data"]["related_organism_scientific_name"]
         return scientific_name
 
+    def run_poolstats_py(self, genes_table_fp, pool_fp, nMapped, tmp_dir):
+        """
+        """
+        success_bool, results_d = RunPoolStatsPy(pool_fp, genes_table_fp, nMapped)
+        
+        if not success_bool:
+            return "NA"
+        else:
+            return results_d['fNonEssentialGenesHitRatio']
+
+
     
+    # OLD - deprecated
     def run_poolstats_r(self, 
                       Stats_op_fp,
                       PoolStats_R_fp,
@@ -367,6 +378,7 @@ class mutantpooluploadUtil:
 
         return None
 
+    # OLD - deprecated
     def get_gene_hit_rate(self, R_log_fp):
         """
         Inputs:
