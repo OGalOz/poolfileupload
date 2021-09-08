@@ -81,7 +81,9 @@ def RunPoolStatsPy(mutant_pool_fp, genes_table_fp, nTotalReads, op_dir="."):
         return [False, {}]
 
     logging.info("Number of insertions in genes: " + str(len(notNA)))
-    pool_report_d = PoolReport(mutant_pool_fp, pool_g, genes_df, nTotalReads, debug=True)
+    pool_report_d = PoolReport(mutant_pool_fp, pool_g, genes_df, nTotalReads, 
+                               write_unhit=False, write_surprise=False, write_hitcounts=False, 
+                               debug=True)
 
     final_stats_d = {
         "nNonPastEnd" : nNonPastEnd,
@@ -94,8 +96,10 @@ def RunPoolStatsPy(mutant_pool_fp, genes_table_fp, nTotalReads, op_dir="."):
     return [True, final_stats_d]
 
 
-def PoolReport(mutant_pool_fp, pool_g, genes_df, nTotalReads, unhit_fp=None, 
-               surprise_fp=None, hitcounts_fp=None, debug=False):
+def PoolReport(mutant_pool_fp, pool_g, genes_df, nTotalReads, 
+                write_unhit=False, write_surprise=False, write_hitcounts=False,
+               unhit_fp=None, surprise_fp=None, hitcounts_fp=None, 
+               debug=False):
     """
     Args:
         pool_df (pandas DataFrame): DataFrame of mutant pool file
@@ -154,16 +158,18 @@ def PoolReport(mutant_pool_fp, pool_g, genes_df, nTotalReads, unhit_fp=None,
                   f" fNonEssential: {fNonEssentialGenesHitRatio}"
                   )
    
-    #unhit
-    if unhit_fp is None:
-        unhit_fp = "unhit_genes.tsv"
-    write_unhit_file(genes_df, unhit_fp)
+    if write_unhit:
+        #unhit
+        if unhit_fp is None:
+            unhit_fp = "unhit_genes.tsv"
+        write_unhit_file(genes_df, unhit_fp)
 
-    # surprise
-    if surprise_fp is None:
-        surprise_fp = "surprise_hits.tsv"
-    essential_hits_df = genes_df[(genes_df["crude_essential"]) & (genes_df["good_hit"])]
-    essential_hits_df.to_csv(surprise_fp, sep="\t")
+    if write_surprise:
+        # surprise
+        if surprise_fp is None:
+            surprise_fp = "surprise_hits.tsv"
+        essential_hits_df = genes_df[(genes_df["crude_essential"]) & (genes_df["good_hit"])]
+        essential_hits_df.to_csv(surprise_fp, sep="\t")
 
     # (HitCounts) Strains & Reads per gene
     locusId_to_strains = pool_g2.groupby("locusId").indices
@@ -174,9 +180,10 @@ def PoolReport(mutant_pool_fp, pool_g, genes_df, nTotalReads, unhit_fp=None,
     hits_df.reset_index(drop=True, inplace=True)
     hits_df = hits_df.merge(genes_df, on="locusId")
     hits_df.sort_values(by=["scaffoldId", "begin"], inplace=True)
-    if hitcounts_fp is None:
-        hitcounts_fp = "hitcounts.tsv"
-    hits_df.to_csv(hitcounts_fp, sep="\t", index=False)
+    if write_hitcounts:
+        if hitcounts_fp is None:
+            hitcounts_fp = "hitcounts.tsv"
+        hits_df.to_csv(hitcounts_fp, sep="\t", index=False)
 
     median_strains_per_gene = statistics.median(hits_df["nStrains"].to_list())
     mean_strains_per_gene = statistics.mean(hits_df["nStrains"].to_list())
