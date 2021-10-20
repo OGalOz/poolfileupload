@@ -1,7 +1,7 @@
 #
 # define display information
 #
-name: RBTnSeq Import File (TSV) from Staging Area
+name: RBTnSeq Import Files (TSV) from Staging Area
 subtitle: |
     Import an RBTnSeq table (in TSV format) from your staging area into your Narrative
 

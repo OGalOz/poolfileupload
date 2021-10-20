@@ -277,6 +277,10 @@
                     "target_property": "sep_type"
                 },
                 {
+                    "input_parameter": "protocol_type",
+                    "target_property": "protocol_type"
+                },
+                {
                     "input_parameter": "staging_file_names",
                     "target_property": "staging_file_names"
                 },

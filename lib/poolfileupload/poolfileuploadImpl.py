@@ -61,6 +61,7 @@ class poolfileupload:
             'pool_file_type' (str): 'genes_table' or 'mutantpool' or 'barcodecount' or 'experiments' or 'model'
             'description' (str): Free string 
             'sep_type': 'TSV' or 'CSV'
+            'protocol_type': fixed vocab
             'staging_file_names' (list<str>): list<filenames> 
             'output_names' list<str>: List<Free string> - Correlate to staging_file_names
         :returns: instance of type "ReportResults" -> structure: parameter
@@ -115,7 +116,8 @@ class poolfileupload:
                 elif pft == 'barcodecount':
                     if "protocol_type" not in params or params["protocol_type"] == "":
                         raise Exception("If uploading a barcodecount file, upload "
-                                        "protocol type as well (under Advanced).")
+                                        "protocol type as well (under Advanced)." + \
+                                        json.dumps(params))
                     if "mutantpool_ref" not in params or params["mutantpool_ref"] == "":
                         raise Exception("If uploading barcodecounts files, upload "
                                         "related mutant pool as well (under Advanced).")
